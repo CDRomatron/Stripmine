@@ -14,7 +14,7 @@
 
 \usepackage{graphicx} % support the \includegraphics command and options
 
-% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 
 %%% PACKAGES
 \usepackage{booktabs} % for much better looking tables
@@ -24,6 +24,7 @@
 \usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
 \usepackage[toc,page]{appendix}
 % These packages are all incorporated in the memoir class to one degree or another...
+\usepackage{placeins}
 
 %header and footer settings
 \pagestyle{fancyplain}
@@ -50,6 +51,8 @@
                                {\bfseries}}
 \makeatother
 
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
 
 %this starts the document
 \begin{document}
@@ -64,7 +67,7 @@
 
 %LaTeX let you define the abstract separately so it wont get sucked into the main document.
 \begin{abstract}
-The goal of this project is to develop an application that will be able to perform argument mining, by analysing text and to identify the components of arguments. The goal is to be able to spider through the internet and obtain the text from various websites. The aim of this project is that the software created from it will be able to work using the same SADFace format used in many other argumentation-based applications used in Napier University.
+
 \end{abstract}
 \pagebreak
 
@@ -90,51 +93,281 @@ Insert acknowledgements here
 \section{Introduction}
 
 \subsection{Background}
-Argumentation 
+Research into argumentation has become a topic of interest in AI. The target audience for the deliverables is to assist those who are researching and developing software involving argumentation. The importance of this project is so that researchers can have a tool to analyse text for arguments and work directly with a format compatible with existing tools for working with arguments.\newline
 
- \subsubsection{Overview Of Project Content and Milestones}
+\subsection{Aim and Objectives}
+The aim of this project is to develop a Python application that will be able to perform argument mining, by analysing text and to identify the components of arguments. The goal is to be able to spider through the internet and obtain the text from various websites. The aim of this project is that the software created from it will be able to work using the same SADFace format used in many other argumentation-based applications used in Napier University. In order to achieve this aim, the following objectives must be met:\newline
+\subsection{Scope of the project}
 
-This is a sub sub section with a list of bullet points.
-\begin{itemize}\itemsep0pt
-	\item A working X, that will be used for this investigation.
-	\item Investigation of current tools and their potential use during an investigation of X .
-	\item Programming of X with related frameworks Y and Z.
-	\item That is all.
-\end{itemize}
+\subsection{Structure of the dissertation}
 
 \newpage
+
 \section{Literature Review}
 
 \subsection{Introduction}
 
+This sections aims to provide the relevant background context for this project. This section will look at Argumentation in natural language, as well as decide on a definition of what will be considered an argument for this project. 
+
 \subsection{Arguments and Argumentation Theory}
+
+\subsubsection{Defining an argument}
 When working with arguments, it is important to decide upon a strict definition so that we can differentiate what \emph{will} be considered an argument by our definition and what \emph{will not} be considered an argument. Within the context of natural language, an argument is used to portray evidence to either criticise or support a claim (Walton, 2006). \newline
 
-The structure of arguments is described by Eemeren et al. as a ``constellation of expressed thought contents, called \emph{propositions}'' (Eemeren et al. 2014. p2). Eemeren et al. goes on to suggest that propositions are made up of two connected components. The first component they outline is the ``subject'', which is \emph{what} you are talking about (such as a person, place or item). The second component they outline as the ``predicate'', which is what you are describing the subject \emph{as}. Gilbert presents an example of how this structure can be used in regular speech.\newline
+The structure of arguments is described by Van Eemeren et al. as a ``constellation of expressed thought contents, called \emph{propositions}'' (Van Eemeren et al. 2014. p2). Van Eemeren et al. goes on to suggest that propositions are made up of two connected components. The first component they outline is the ``subject'', which is \emph{what} you are talking about (such as a person, place or item). The second component they outline as the ``predicate'', which is what you are describing the subject \emph{as}. Gilbert presents an example of how this structure can be used in regular speech.\newline
 
 ``Eating vegetables is good for you, and since broccoli is a vegetable, it's good for you.''(Gilbert, 2017, p3).\newline
 
 This example could either be used in support of someone highlighting the qualities of broccoli or to criticise someone providing a negative opinion of broccoli. There are two propositions that can be identified in the example. The first proposition states \emph{``Eating vegetables is good for you''}. Here the subject is \emph{`vegetables'} and the predicate is that \emph{`eating (them) is good for you'}. The second proposition states \emph{``broccoli is a vegetable''}. Here the subject is \emph{`broccoli'} and the predicate is that \emph{`(it) is a vegetable'}.  From here, we can see that the subject of the first proposition is referenced in the predicate of the second proposition, linking the propositions together to form what we have described as an argument. \newline
 
-[NB: I'd love to have a section here explaining why argumentation research is important, but I haven't found anything regarding it yet, continue looking. Also, aim to talk about the standard argument format we are using (sadface).]
+\subsection{Conclusion}
 
+\newpage
+
+\section{Technical Review}
 
 \subsection{Natural Language Processing}
 Natural language processing can be defined as creating structured data from unstructured natural text (Kreimeyer et al, 2017). Creating this structured data manually can be at best time consuming, and at worst inconsistent due to the ambiguity that comes as a result of natural language. Martinez outlines that this challenge regarding ambiguity is only amplified when attempting to design a set of rules to interpret the meaning words that can have multiple meanings depending on the surrounding context, known as \emph{'word sense disambiguation'}. For example, if we saw the word \emph{``fly''} on its own, we can't say for certain whether it is referring to the noun (`\emph{fly}' as in \emph{insect}) or the verb (`\emph{fly}' as in \emph{`to fly'}) (Martinez, 2010, p354).\newline
+
+Collobert et al suggests four standard tasks that can be used to benchmark a NLP approach (Collobert et al, 2011). These four tasks are described below. \newline
+
+\subsubsection{Part-Of-Speech Tagging}
+Linckels and Meinel outline techniques we can use to determine the structure of sentences (Linckels et al, 2011). The first technique is \emph{'Part-Of-Speech Tagging'}, also known as \emph{tokenization}, which is the process of identifying each word in the sentence. Many standards exist for set categories that words are tagged with. Examples include singular noun (notated as `NN'), plural noun (`NNS'), adjective (`JJ') and past tense verb (`VBD')\footnote{Examples used are from the \emph{Brown} tag set.}. During the tagging process many problems can arise, one of which being words with multiple meanings such are our \emph{`fly'} example. In situations such as these, assumptions are made based on probability and on existing corpora.\newline
+
+\subsubsection{Chunking}
+Another technique we can use is creating \emph{'phrases'} or \emph{'chunks'} based on the tags we can established during the tokenization process. In our definition, sentences will be made up of at least one phrase. Similarly to tokenization, we can identify phrases based on established definitions on what phrases can be. Phrases are usually based on tags and are the focus of the phrase, such as a noun phrase, a verb phrase or an adjective phrase. Linckels and Meinel use the following example to illustrate how the sentence \emph{``Every network requires a protocol like TCP/IP.''} would be broken down into phrases as a list as such:\newline
+
+\begin{center}
+\parbox{0cm}{\begin{tabbing}
+(S \= (NP \= (DT Every)\\
+\> \> (NN Network))\\
+\> (VP (VVZ requires)\\
+\> \> (NP \= (DT a)\\
+\> \> \> (NN protocol))\\
+\> \> (PP (IN like)\\
+\> \> \> (NN TCP/IP))))\\
+\end{tabbing}}
+\end{center}
+
+Due to the ambiguity of natural language, the process of creating these phrases may not also result in a single sentence structure as seen above as different parts of the sentence can be interpreted in multiple ways. When this situation arises, decide the \emph{best} answer based on probability established by either a human or existing data. \newline
+
+\subsubsection{Named Entity Recognition}
+Proper nouns, when referred to in the context of NLP, are known as \emph{Named entities}. Named entities are words or phrases in text that represent the name of a person, place, or organisation (Tjong Kim Sang et al, 2003). Where as it was previously claimed that large gazetteers, catalogues of names and places were required for the most accurate named entity recognition, a comprehensive list of \emph{every} name would not be feasible to create due to the quantity of information and how fast it changes (Mikheev et al, 1999). \newline
+
+As a system is tagging named entities during the NER process, it is important that entities that represent the same real world entity are identically tagged, however, as indicated by Ratinov et al, this can raise problems (Ratinov et al, 2009). The first of these is instances where named entities need to be correctly chunked, for example, where a text may contain two instances of the word "Australia", upon closer examination of the text they are actually two different entities, "Australia" and "The bank of Australia", and as such should be separately tagged as a location and as a organisation respectively. Secondly, we encounter the opposite problem where we require different written words to correspond to the same entity. This occurs frequently in text as it is typical for authors to refer to an entity with its full name in it's first instance, but in future using a shortened representation of the name, for example using \emph{"President Barack Obama"} at first, but then using \emph{"Obama"} throughout the remainder of the text (Chieu et al, 2002). \newline
+
+Correctly classifying named entities which are not catalogued, such as titles of media, can prove challenging. One approach we can take is by looking at surrounding words to see if any of them imply what the named entity is, for example, if the named entity was proceeded by the word \emph{watching} or \emph{watched}, we can guess that the named entity is most likely a piece of visual media such as a movie or TV programme (Downey et al, 2010).
+
+\subsubsection{Semantic Role Labeling}
 
 
 
 \subsection{Argument Mining}
 
+Argument mining is described by Niculae et al as the process of automatically identifying arguments within documents (Niculae et al, 2017). 
+
+\subsubsection{MARGOT}
+
+MARGOT (Mining ARGuments frOm Text) is an argument mining system which uses machine learning and natural language processing trained using a corpus of annotated argument-focused texts covering a variety of topics (Lippi et al, 2016). The argument mining process used by MARGOT is broken into two steps:
+
+\begin{itemize}
+    \item Argumentative sentence detection
+    \begin{itemize}
+        \item This stage uses a classifier to identify text containing claims, and another classifier to identify text containing evidence. The text must be checked by both classifiers as phrases can be classified as both containing claims and containing evidence.
+    \end{itemize}
+    \item Argument component boundaries detection
+    \begin{itemize}
+        \item This stage uses a trained combined Support Vector Machine and Hidden Markov Model to apply claim and non-claim tokens to a sentence. Using the Stanford CoreNLP suite is used for identifying the named entity as well as other NLP related tags. 
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Hidden Markov Model}\mbox{}\\
+
+A Hidden Markov Model (HMM) is a tool which has seen application in part-of-speech tagging (Kupiec, 1992). Markov models are used for representing a finite number of states with varying probibilty. Within the context of part-of-speech tagging, the Markov model is used for determining the category of a word. Unlike a traditional Markov model which would be trained using a corups consisting for tagged words, a \emph{hidden} Markov model is trained using a corpus of untagged words and relies on the application is an additional algorithm such as the Baum-Welch algorithm.
+
+\paragraph{HMM using Support Vector Machine}\mbox{}\\
+
+Support Vector Machine (SVM) is a learning technique used to find the solution with the least error based on a set of training data (Joachims, 1998). Results from a SVM are evaluated by comparing a proposed solution with a randomly selected example and calculating the difference between the error in the proposed solution and the error value provided in the training data.
+
+Altun et al (2003) suggests that using a SVM with the HMM covers many of the weaknesses of the HMM such as limitations on typical training data and a limited scope of independent assumptions that result from a HMM. [expand on this...]
+
 \subsection{Web Spidering}
 
-\newpage
-\section{Methodology}
+\subsection{Python}
+
+\subsection{MongoDB}
+
+\subsection{RESTful API}
+
+\subsection{Web Frameworks}
+
+\subsubsection{Flask}
+
+\subsection{Other Libraries}
+
+\subsubsection{Bootstrap}
+
+Bootstrap is an open-source front-end framework which provides many tools which assists both prototyping and full release of applications on the web (Getbootstrap.com, 2019). By using Bootstrap in this project, we are able to minimise the time spent on web design and use that time to improve the functionality of the application.
+
+\subsubsection{Regular Expresions}
+
+\subsubsection{SADFace}
+
+SADFace (Simple Argument Description Format) is a JSON-based document format used to model the various aspects and meta-data related to arguments. The aim of SADFace is the provide a format suitable for use with argument related tools for the web. The contained argument is stored as a directed graph, with the nodes representing either premises or the conclusion and the edges containing both a source and target to signify direction (Wells, 2018).
+
+\subsection{Conclusion}
 
 \newpage
-\section{Additional Information / Knowledge Required}
-Experience with Linux and managing Virtual machines, networking.
-So on and so forth...
+\section{Project Analysis}
+
+\subsection{Requirements Analysis}
+
+Requirements analysis is the fundamental first stage of any software development project. During this stage, time is spent evaluating the individual requirements of the various stakeholders of the project. By identifying the requirements at the start of the project, clear boundaries are set about exactly what the scope of the final product will be, so any missing stakeholder requirements can be identified during this stage (Nahar et al, 2013).
+
+\subsubsection{Stakeholders}
+
+Within the context of a project, a "stakeholder" is anyone with an interest or influence on the project, either a person involved during the development stage or an end user (or person affected by the work performed by the end user). The stakeholders that have been identified for this project are as follows:
+\begin{itemize}
+    \item The author of this document
+    \begin{itemize}
+        \item Being both the developer of the project and the author of this document, this stakeholder has a strong influence on the scope of this project.
+    \end{itemize}
+    \item Dr. Simon Wells
+    \begin{itemize}
+        \item Dr. Wells is closely involved with the Edinburgh Napier School of Computing's argumentation research\footnote{http://arg.napier.ac.uk/} and has acted as the supervisor for this project.
+    \end{itemize}
+    \item Any researcher studying argumentation
+    \begin{itemize}
+        \item This document and associated project may provide a basis for further research into the topics covered in this document. This is an example of where not every stakeholder cannot be questioned about their requirements as an exhausted list of every researcher with an interest in argumentation cannot exist, instead we must base their requirements off a small number of stakeholders which apply to this category.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{MoSCoW}
+
+MoSCoW is a requirements prioritisation technique which sorts all of the stakeholder's requirements into one of four categories (Miranda, 2011):
+
+\begin{itemize}
+    \item Must have
+    \begin{itemize}
+        \item Requirements designated as "must have" are essential to the core functionality of the project. The minimum state a project must have reached to be considered 'complete' would be to have all of these requirements met.
+    \end{itemize}
+    \item Should have.
+    \begin{itemize}
+        \item Although not essential to the core functionality of the project, it would be in the stakeholders best interest for these requirements to be met. These may be features to help improve the ease of use with the product and may help improve the end user's efficiency. If there is additional time/resources available once all of the "must have" requirements are met, these are the first requirements to be worked on afterwards.
+    \end{itemize}
+    \item Could have.
+    \begin{itemize}
+        \item Requirements designated as "could have" are often requirements related to improve the 'Quality of life' of the end user. Requirements can end up in this category due to requiring a large amount of resources to create relative to the impact it would have on the functionality of the final product, such as aesthetics.
+    \end{itemize}
+    \item Won't have.
+    \begin{itemize}
+        \item These requirements are decided at the start of the project as being outside the scope of the project. Requirements can be identified as such for many reasons such as a lack of time or a lack of required resources to realistically met the requirements within the context of the project.
+    \end{itemize}
+\end{itemize}
+
+By having a distinct list of the requirements sorted into the four categories, stakeholders will be able to easily identify if the prioritisation given to the requirements that are relevant of that stakeholder are accounted for.
+
+\subsubsection{List of Requirements}
+
+Shown below is the MoSCoW requirements analysis that has been preformed for this project.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|p{1cm}|p{8cm}|p{2cm}|}
+    \hline
+    ID & Requirement & Priority\\
+    \hline
+    1 & Access the web to retrieve text through an existing API. & Must\\
+    \hline
+    2 & Perform argument mining on a text with results being stored in the SADFace format. & Must\\
+    \hline
+    3 & Store the results in a database. & Must\\
+    \hline
+    4 & Be developed in a modular structure so that aspects of the application can be swapped with alternative tools in future development. & Must\\
+    \hline
+    5 & Be able to access and search the results through a RESTful API. & Should\\
+    \hline
+    6 & Provide a simple UI to access the API. & Should\\
+    \hline
+    7 & Access the web and retrieve text by identifying bodies of text in web pages. & Could\\
+    \hline
+    8 &  & Won't\\
+    \hline
+    9 &  & Won't\\
+    \hline
+    \end{tabular}
+    \caption{MoSCoW}
+    \label{table:1}
+\end{table}
+
+\FloatBarrier
+
+\subsection{Development Methodology}
+
+\newpage
+\section{Design}
+
+\subsection{RESTFul Design}
+
+\newpage
+\section{Implementation}
+
+The implementation of this project has been split into two halves, known as ``Stripmine-Script'' and ``Stripmine-Site''. Stripmine-Script acts as a modular python script which takes in bodies of text from a source, such as the internet or books, runs the text through an argument miner, compiles the data into the SADFace format and inserts the resulting SADFace document into a database. Stripmine-Site is a Flask web-app search tool which uses full-text indexing to search and display relevant data from the database.\newline
+
+[INSERT FLOWCHART HERE]\newline
+
+\subsection{Stripmine-Script}
+
+This script houses four modules which can be interchanged to suit the requirements of the user. These modules are a Spider, Miner, Parser and Database. Each module exists as a python class which inherits from an abstract base class. Each of the base classes include information on how they are to be used, what to expect as inputs from the previous step in the chain, and what to output to be compatible with the next step in the chain. 
+
+For this project, four modules have been developed and implementation to demonstrate how the software functions.
+
+\subsubsection{Spider}
+
+The Spider class is the first module in the chain. This module obtains text from a source as well as any metadata associated with the source. The data is written to an instance of SpiderExtract, and the Spider module outputs a list of SpiderExtract items.
+
+For this implementation the Spider accesses the Reddit API for the ``changemyview'' section\footnote{https://www.reddit.com/r/changemyview}. It obtains posts made in this section, then collects the text of these posts and relating metadata such as a link to the post, the authors username, and title of the post. The module takes this data and assigns the text and metadata to the SpiderExtract class and appends it to a list to be returned once the Spider has finished. 
+
+\subsubsection{Miner}
+
+The Miner class accepts text gathered by the spider and runs the text through an argument miner. The argument takes this text and attempts to identify any arguments made in the text. Depending on the argument miner used, different data may be obtained. Once the argument miner has finished processing, the data is serialised into JSON format.
+
+For this project MARGOT\footnote{http://margot.disi.unibo.it/} was used to identify and classify arguments.
+
+\subsubsection{Parser}
+
+The Parser class works in tandem with the Miner class and an appropriate parser will need to be developed to match the miner used. The parser receives the JSON from the miner and converts the data into the SADFace format. Due to the variety of ways the miner could produce data, a parser will have to be developed to suit the data produced by the miner.
+
+\subsubsection{Database}
+
+The Database module takes the resulting SADFace document and inserts it into a database. For this projects implmentation MongoDB was used.
+
+\subsection{Stripmine-Site}
+
+Stripmine-Site is a Flask web-app used for displaying the contents of the database containing SADFace formatted documents. The site consists of three pages, a home page, a search results page, and a document page.
+
+\subsubsection{Home Page}
+
+The home page acts as the root of the web app. This page allows the user to enter a term to search the database for as well as filter for specific categories of arguments.
+
+[INCLUDE PICTURE]
+
+\subsubsection{Results Page}
+
+This page shows the results based on the terms specified in the search. The results are displayed using a Bootstrap ``accordion''. 
+
+\subsubsection{Document Page}
+
+\newpage
+\section{Evaluation}
+
+\newpage
+\section{Conclusion}
+
+\subsection{Goals}
+
+\subsection{Future Work}
+
 
 \newpage
 \begin{thebibliography}{9}
@@ -145,25 +378,76 @@ So on and so forth...
   New York: Cambridge University Press.
   
 \bibitem{eemeren14}
-  Eemeren, F.H., Garssen, B., Krabbe, E.C.W., Snoeck Henkemans, A.F., Verheij, B., Wagemans, J.H.M. (2014).
-  \textit{Handbook of Argumentation Theory.}
-  Dordrecht: Springer.
+  Van Eemeren, F. H., Garssen, B., Krabbe, E. C., Henkemans, A. F. S., Verheij, B., \& Wagemans, J. H. (2014). \textit{Handbook of argumentation theory}.
 
 \bibitem{gilbert17}
-  Gilbert, M.A. (2017[maybe 2018?])
+  Gilbert, M.A. (2017).
   Argumentation Theory. In M. Allen (Ed.), \textit{The SAGE Encyclopedia of Communication Research Methods.} (pp. 53-56). Thousand Oaks: SAGE Publications, Inc.
 
 \bibitem{kreimeyer17}
-  Kreimeyer, K., Foster, M., Pandey, A., Arya, N., Halford, G., Jones, S.F., Forshee, R., Walderhaug, M., Botsis, T. (2017).
+  Kreimeyer, K., Foster, M., Pandey, A., Arya, N., Halford, G., Jones, S.F., Forshee, R., Walderhaug, M., \& Botsis, T. (2017).
   Natural language processing for capturing and standardizing unstructured clinical information: A systematic review. \textit{Journal of Biomedical Informatics, 73}, 14-29.
   
 \bibitem{martinez10}
   Martinez, A. (2010).
   Natural language processing. \textit{Wiley Interdisciplinary Reviews: Computational Statistics, 2(3)}, 352-357.
 
-\bibitem{serge11}
-  Linckels, S., & Meinel, C. (2011).
+\bibitem{linckels11}
+  Linckels, S., \& Meinel, C. (2011).
   Natural Language Processing. In \textit{E-Librarian Service: User-Friendly Semantic Search in Digital Libraries} (X.media.publishing, pp. 61-79). Berlin, Heidelberg: Springer Berlin Heidelberg.
+  
+\bibitem{niculae17}
+  Niculae, V., Park, J., \& Cardie, C. (2017). \textit{Argument Mining with Structured SVMs and RNNs.}
+  
+\bibitem{collobert11}
+  Collobert, R., Weston, J., Bottou, L., Karlen, M., Vavukcuoglu, K., \& Kuksa, P. (2011).
+  Natural Language Processing (Almost) from Scratch \textit{Journal of Machine Learning Research, 12}(Aug), 2493-2537.
+
+\bibitem{sang03}
+  Tjong Kim Sang, E. F., \& De Meulder, F. (2003). Introduction to the CoNLL-2003 shared task: Language-independent named entity recognition. In \textit{Proceedings of the seventh conference on Natural language learning at HLT-NAACL 2003-Volume 4} (pp. 142-147). Association for Computational Linguistics.
+  
+\bibitem{mikheev99}
+  Mikheev, A., Moens, M., \& Grover, C. (1999). Named entity recognition without gazetteers. In \textit{Proceedings of the ninth conference on European chater of the Association for Computational Linguistics} (pp. 1-8). Association for Computational Linguistics.
+  
+\bibitem{ratinov09}
+  Ratinov, L., \& Roth, D. (2009). Design challenges and misconceptions in named entity recognition. In \textit{Proceedings of the Thirteenth Conference on Computational Natural Language Learning} (pp. 147-155). Association for Computational Linguistics.
+  
+\bibitem{chieu02}
+  Chieu, H. L., \& Ng. H. T. (2002). Named entity recognition: a maximum entropy approach using global information. In \textit{Proceedings of the 19th international conference on Computational linguistics-Volume 1} (pp. 1-7). Association for Computational Linguistics.
+  
+\bibitem{downey10}
+  Downey, D., Etzioni, O., \& Soderland, S. (2010). Analysis of a probabilistic model of redundancy in unsupervised information extraction. In \textit{Artificial Intelligence, 174} (pp. 726-748). Elsevier.
+
+\bibitem{ritter11}
+  Ritter, A., Clark, S., \& Etzioni, O. (2011).
+  Named entity recignition in tweets: an experimental study. In \textit{Proceedings of the conference on empirical methods in natural language processing} (pp. 1524-1534). Association for Computational Linguistics.
+  
+\bibitem{carreras05}
+  Carreras, X., \& Màrquez, L. (2005). Introduction to the CoNLL-2005 shared task: Semantic role labeling. In \textit{Proceedings of the ninth conference on computational natural language learning} (pp. 152-164). Association for Computational Linguistics.
+  
+\bibitem{lippi16}
+  Lippi, M., \& Torroni, P. (2016). MARGOT: A web server for argumentation mining . In \textit{Expert Systems With Applications, 65}, 292-303.
+  
+\bibitem{kupiec99}
+  Kupiec, J. (1992). Robust part-of-speech tagging using a hidden Markov model. \textit{Computer Speech \& Language, 6}(3), 225-242.
+
+\bibitem{joachims98}
+  Joachims, T. (1998, April). Text categorization with support vector machines: Learning with many relevant features. In \textit{European conference on machine learning} (pp. 137-142). Springer, Berlin, Heidelberg.
+  
+\bibitem{altun03}
+  Altun, Y., Tsochantaridis, I., \& Hofmann, T. (2003). Hidden markov support vector machines. In \textit{Proceedings of the 20th International Conference on Machine Learning (ICML-03)} (pp. 3-10).
+  
+\bibitem{bootstrap19}
+  Getbootstrap.com. (2019). \textit{Bootstrap}. [online] Available at: https://getbootstrap.com/ [Accessed 11 Feb. 2019].
+
+\bibitem{wells18}
+  Wells, S. (2018). \textit{siwells/SADFace}. [online] GitHub. Available at: https://github.com/siwells/SADFace [Accessed 9 Feb. 2019].
+ 
+\bibitem{nahar13}
+  Nahar, N., Wora, P., \& Kumaresh, S. (2013). Managing Requirement Elicitation Issues Using Step-Wise Refinement Model. \textit{International Journal of Advanced Studies in Computers, Science and Engineering, 2}(5), 27.
+
+\bibitem{miranda11}
+  Miranda, E. (2011). Time boxing planning: Buffered moscow rules. \textit{ACM SIGSOFT Software Engineering Notes, 36}(6), 1-5.
 
 \end{thebibliography}
 %example of References. See https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
