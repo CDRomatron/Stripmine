@@ -16,6 +16,8 @@
 
 \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 
+\usepackage{url}
+
 %%% PACKAGES
 \usepackage{booktabs} % for much better looking tables
 \usepackage{array} % for better arrays (eg matrices) in maths
@@ -124,7 +126,7 @@ This example could either be used in support of someone highlighting the qualiti
 
 \newpage
 
-\section{Technical Review}
+\section{Background}
 
 \subsection{Natural Language Processing}
 Natural language processing can be defined as creating structured data from unstructured natural text (Kreimeyer et al, 2017). Creating this structured data manually can be at best time consuming, and at worst inconsistent due to the ambiguity that comes as a result of natural language. Martinez outlines that this challenge regarding ambiguity is only amplified when attempting to design a set of rules to interpret the meaning words that can have multiple meanings depending on the surrounding context, known as \emph{'word sense disambiguation'}. For example, if we saw the word \emph{``fly''} on its own, we can't say for certain whether it is referring to the noun (`\emph{fly}' as in \emph{insect}) or the verb (`\emph{fly}' as in \emph{`to fly'}) (Martinez, 2010, p354).\newline
@@ -154,11 +156,11 @@ Due to the ambiguity of natural language, the process of creating these phrases 
 \subsubsection{Named Entity Recognition}
 Proper nouns, when referred to in the context of NLP, are known as \emph{Named entities}. Named entities are words or phrases in text that represent the name of a person, place, or organisation (Tjong Kim Sang et al, 2003). Where as it was previously claimed that large gazetteers, catalogues of names and places were required for the most accurate named entity recognition, a comprehensive list of \emph{every} name would not be feasible to create due to the quantity of information and how fast it changes (Mikheev et al, 1999). \newline
 
-As a system is tagging named entities during the NER process, it is important that entities that represent the same real world entity are identically tagged, however, as indicated by Ratinov et al, this can raise problems (Ratinov et al, 2009). The first of these is instances where named entities need to be correctly chunked, for example, where a text may contain two instances of the word "Australia", upon closer examination of the text they are actually two different entities, "Australia" and "The bank of Australia", and as such should be separately tagged as a location and as a organisation respectively. Secondly, we encounter the opposite problem where we require different written words to correspond to the same entity. This occurs frequently in text as it is typical for authors to refer to an entity with its full name in it's first instance, but in future using a shortened representation of the name, for example using \emph{"President Barack Obama"} at first, but then using \emph{"Obama"} throughout the remainder of the text (Chieu et al, 2002). \newline
+As a system is tagging named entities during the NER process, it is important that entities that represent the same real world entity are identically tagged, however, as indicated by Ratinov et al, this can raise problems (Ratinov et al, 2009). The first of these is instances where named entities need to be correctly chunked, for example, where a text may contain two instances of the word ``Australia'', upon closer examination of the text they are actually two different entities, ``Australia'' and ``The bank of Australia'', and as such should be separately tagged as a location and as a organisation respectively. Secondly, we encounter the opposite problem where we require different written words to correspond to the same entity. This occurs frequently in text as it is typical for authors to refer to an entity with its full name in it's first instance, but in future using a shortened representation of the name, for example using \emph{``President Barack Obama''} at first, but then using \emph{``Obama''} throughout the remainder of the text (Chieu et al, 2002). \newline
 
 Correctly classifying named entities which are not catalogued, such as titles of media, can prove challenging. One approach we can take is by looking at surrounding words to see if any of them imply what the named entity is, for example, if the named entity was proceeded by the word \emph{watching} or \emph{watched}, we can guess that the named entity is most likely a piece of visual media such as a movie or TV programme (Downey et al, 2010).
 
-\subsubsection{Semantic Role Labeling}
+\subsubsection{Semantic Role Labelling}
 
 
 
@@ -183,7 +185,7 @@ MARGOT (Mining ARGuments frOm Text) is an argument mining system which uses mach
 
 \paragraph{Hidden Markov Model}\mbox{}\\
 
-A Hidden Markov Model (HMM) is a tool which has seen application in part-of-speech tagging (Kupiec, 1992). Markov models are used for representing a finite number of states with varying probibilty. Within the context of part-of-speech tagging, the Markov model is used for determining the category of a word. Unlike a traditional Markov model which would be trained using a corups consisting for tagged words, a \emph{hidden} Markov model is trained using a corpus of untagged words and relies on the application is an additional algorithm such as the Baum-Welch algorithm.
+A Hidden Markov Model (HMM) is a tool which has seen application in part-of-speech tagging (Kupiec, 1992). Markov models are used for representing a finite number of states with varying probability. Within the context of part-of-speech tagging, the Markov model is used for determining the category of a word. Unlike a traditional Markov model which would be trained using a corups consisting for tagged words, a \emph{hidden} Markov model is trained using a corpus of untagged words and relies on the application is an additional algorithm such as the Baum-Welch algorithm\footnote{\url{https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-410-principles-of-autonomy-and-decision-making-fall-2010/lecture-notes/MIT16_410F10_lec21.pdf}}.
 
 \paragraph{HMM using Support Vector Machine}\mbox{}\\
 
@@ -191,17 +193,24 @@ Support Vector Machine (SVM) is a learning technique used to find the solution w
 
 Altun et al (2003) suggests that using a SVM with the HMM covers many of the weaknesses of the HMM such as limitations on typical training data and a limited scope of independent assumptions that result from a HMM. [expand on this...]
 
-\subsection{Web Spidering}
+\subsection{Reddit API}
+
+Reddit is a social networking website which allows users to share interesting information and have other users vote "up" or "down" the content (Hanson, 2016). Content shared on Reddit come in two varieties, links to external websites, typically news articles or humorous images, and \emph{self posts}, consisting of text written by the user. Since there is no restriction on what subject areas can be covered by users, the website is broken down into various themed versions of Reddit known as ``Subreddits''.
+
+Reddit provides an API for developers to access the sites content programatically by registering the application and following the API terms\footnote{https://github.com/reddit-archive/reddit/wiki/API}.
 
 \subsection{Python}
 
 \subsection{MongoDB}
 
-\subsection{RESTful API}
+\subsection{Elasticsearch}
+
 
 \subsection{Web Frameworks}
 
 \subsubsection{Flask}
+
+\subsubsection{Jinja2}
 
 \subsection{Other Libraries}
 
@@ -247,17 +256,17 @@ Within the context of a project, a "stakeholder" is anyone with an interest or i
 MoSCoW is a requirements prioritisation technique which sorts all of the stakeholder's requirements into one of four categories (Miranda, 2011):
 
 \begin{itemize}
-    \item Must have
+    \item Must have.
     \begin{itemize}
-        \item Requirements designated as "must have" are essential to the core functionality of the project. The minimum state a project must have reached to be considered 'complete' would be to have all of these requirements met.
+        \item Requirements designated as ``must have'' are essential to the core functionality of the project. The minimum state a project must have reached to be considered `complete' would be to have all of these requirements met.
     \end{itemize}
     \item Should have.
     \begin{itemize}
-        \item Although not essential to the core functionality of the project, it would be in the stakeholders best interest for these requirements to be met. These may be features to help improve the ease of use with the product and may help improve the end user's efficiency. If there is additional time/resources available once all of the "must have" requirements are met, these are the first requirements to be worked on afterwards.
+        \item Although not essential to the core functionality of the project, it would be in the stakeholders best interest for these requirements to be met. These may be features to help improve the ease of use with the product and may help improve the end user's efficiency. If there is additional time/resources available once all of the ``must have'' requirements are met, these are the first requirements to be worked on afterwards.
     \end{itemize}
     \item Could have.
     \begin{itemize}
-        \item Requirements designated as "could have" are often requirements related to improve the 'Quality of life' of the end user. Requirements can end up in this category due to requiring a large amount of resources to create relative to the impact it would have on the functionality of the final product, such as aesthetics.
+        \item Requirements designated as ``could have'' are often requirements related to improve the `Quality of life' of the end user. Requirements can end up in this category due to requiring a large amount of resources to create relative to the impact it would have on the functionality of the final product, such as aesthetics.
     \end{itemize}
     \item Won't have.
     \begin{itemize}
@@ -348,15 +357,19 @@ Stripmine-Site is a Flask web-app used for displaying the contents of the databa
 
 \subsubsection{Home Page}
 
-The home page acts as the root of the web app. This page allows the user to enter a term to search the database for as well as filter for specific categories of arguments.
+The home page acts as the root of the web app. This page allows the user to enter a term to search the database for as well as filter for specific categories of arguments. The form uses a POST request to submit the data to the results page for searching.
 
 [INCLUDE PICTURE]
 
 \subsubsection{Results Page}
 
-This page shows the results based on the terms specified in the search. The results are displayed using a Bootstrap ``accordion''. 
+This page shows the results based on the terms specified in the search that was POSTed. The results are displayed using a Bootstrap ``accordion''. The text is retrieved from the database using full-text indexing through Elasticsearch\footnote{https://www.elastic.co/}. From this page, the user can browse the arguments, view the metadata associated with the arguments presented, and further refine their search. For each of the arguments, the user can be directed to the SADFace document which it is contained within through the document page. Since the page functions primarily through a POST request, if a GET request is received the user is redirected to the home page.
+
+[INCLUDE PICTURE]
 
 \subsubsection{Document Page}
+
+The document page shows the full metadata and a list of all the arguments presented within a SADFace document. The associated metadata is presented at the top in a programmatically generated table displaying every metadata field and value. The arguments are presented below in the same manner as is used for the results page. A link is provided to download the SADFace document for further work in an application such as Monkeypuzzle\footnote{http://arg.napier.ac.uk/monkeypuzzle/}. 
 
 \newpage
 \section{Evaluation}
@@ -436,6 +449,9 @@ This page shows the results based on the terms specified in the search. The resu
   
 \bibitem{altun03}
   Altun, Y., Tsochantaridis, I., \& Hofmann, T. (2003). Hidden markov support vector machines. In \textit{Proceedings of the 20th International Conference on Machine Learning (ICML-03)} (pp. 3-10).
+  
+\bibitem{hanson16}
+  Hanson, J. (2016). Reddit. In \textit{The social media revolution: an economic encyclopedia of friending, following, texting, and connecting} (pp. 299-300). Retreved from https://www.vlebooks.com/vleweb/Product/Index/852303?page=0
   
 \bibitem{bootstrap19}
   Getbootstrap.com. (2019). \textit{Bootstrap}. [online] Available at: https://getbootstrap.com/ [Accessed 11 Feb. 2019].
