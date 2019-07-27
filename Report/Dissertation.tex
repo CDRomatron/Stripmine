@@ -191,26 +191,35 @@ A Hidden Markov Model (HMM) is a tool which has seen application in part-of-spee
 
 Support Vector Machine (SVM) is a learning technique used to find the solution with the least error based on a set of training data (Joachims, 1998). Results from a SVM are evaluated by comparing a proposed solution with a randomly selected example and calculating the difference between the error in the proposed solution and the error value provided in the training data.
 
-Altun et al (2003) suggests that using a SVM with the HMM covers many of the weaknesses of the HMM such as limitations on typical training data and a limited scope of independent assumptions that result from a HMM. [expand on this...]
+Altun et al (2003) suggests that using a SVM with the HMM covers many of the weaknesses of the HMM such as limitations on typical training data and a limited scope of independent assumptions that result from a HMM.
 
 \subsection{Reddit API}
 
-Reddit is a social networking website which allows users to share interesting information and have other users vote "up" or "down" the content (Hanson, 2016). Content shared on Reddit come in two varieties, links to external websites, typically news articles or humorous images, and \emph{self posts}, consisting of text written by the user. Since there is no restriction on what subject areas can be covered by users, the website is broken down into various themed versions of Reddit known as ``Subreddits''.
+Reddit is a social networking website which allows users to share interesting information from external sites and have other users vote "up" or "down" the content (Hanson, 2016). Content shared on Reddit come in two varieties, links to external websites, typically news articles or humorous images, and \emph{self posts}, consisting of text written by the user. Since there is no restriction on what subject areas can be covered by users, the website is broken down into various themed versions of Reddit known as ``Subreddits''.
 
-Reddit provides an API for developers to access the sites content programatically by registering the application and following the API terms\footnote{https://github.com/reddit-archive/reddit/wiki/API}.
+Reddit provides an API for developers to access the sites content programatically by registering the application and following the API terms\footnote{\url{https://github.com/reddit-archive/reddit/wiki/API}}.
 
 \subsection{Python}
 
+Python is a high-level, interpreted, object-orientated programming language. Due to features of Python such as automatic memory management, it is ideal for small programs and prototypes (wiki.python.org, 2019). Python includes a large standard library by default, with over 180,000 additional packages developed by the Python community through repositories such as the Python Package Index, known as PyPI (pypi.org, 2019).
+
 \subsection{MongoDB}
+
+MongoDB is a NoSQL database program which allows for the storage of flexible JSON-like documents. MongoDB is simple to configure and use, and provides drivers for a variety of popular languages such as Python, Java and C++ (mongodb.com, 2019).
 
 \subsection{Elasticsearch}
 
+Elasticsearch is an open source search engine which is capable of searching a wide array of data types. Elasticsearch uses an \emph{`inverted index'}\footnote{\url{http://www.dcs.bbk.ac.uk/~dell/teaching/cc/book/ditp/ditp_ch4.pdf} EXPAND IN APPENDIX} data structure to perform full-text indexing to find every unique word in a document and all documents a word occurs in (elastic.co, 2019). 
 
 \subsection{Web Frameworks}
 
 \subsubsection{Flask}
 
+Flask is a web framework that allows the server to be written in Python. Flask acts as a wrapper for Werkzeug\footnote{\url{https://palletsprojects.com/p/werkzeug/}}, a web application utility library, and Jinja\footnote{\url{https://palletsprojects.com/p/jinja/}}, a template engine.
+
 \subsubsection{Jinja2}
+
+Jinja2 is a template engine for Python which allows for the programmatic generation of documents, such as HTML documents for when data needs to be appended server-side.
 
 \subsection{Other Libraries}
 
@@ -218,11 +227,13 @@ Reddit provides an API for developers to access the sites content programaticall
 
 Bootstrap is an open-source front-end framework which provides many tools which assists both prototyping and full release of applications on the web (Getbootstrap.com, 2019). By using Bootstrap in this project, we are able to minimise the time spent on web design and use that time to improve the functionality of the application.
 
-\subsubsection{Regular Expresions}
-
 \subsubsection{SADFace}
 
 SADFace (Simple Argument Description Format) is a JSON-based document format used to model the various aspects and meta-data related to arguments. The aim of SADFace is the provide a format suitable for use with argument related tools for the web. The contained argument is stored as a directed graph, with the nodes representing either premises or the conclusion and the edges containing both a source and target to signify direction (Wells, 2018).
+
+\subsubsection{PRAW}
+
+PRAW (Python Reddit API Wrapper) is a Python package which enables simple access to Reddit's API and is complient with Reddit's API rules.
 
 \subsection{Conclusion}
 
@@ -294,15 +305,17 @@ Shown below is the MoSCoW requirements analysis that has been preformed for this
     \hline
     4 & Be developed in a modular structure so that aspects of the application can be swapped with alternative tools in future development. & Must\\
     \hline
-    5 & Be able to access and search the results through a RESTful API. & Should\\
+    5 & Provide a web interface to access and search the database. & Must\\
     \hline
-    6 & Provide a simple UI to access the API. & Should\\
+    6 & Be able to access and search the results using a full-text indexing engine. & Should\\
     \hline
-    7 & Access the web and retrieve text by identifying bodies of text in web pages. & Could\\
+    7 & Use the SADFace Python library to parse documents into the SADFace format. & Should\\
     \hline
-    8 &  & Won't\\
+    8 & Be able to access and search the results using a RESTFul API. & Should\\
     \hline
-    9 &  & Won't\\
+    9 & Access the web and retrieve text by identifying bodies of text in web pages. & Could\\
+    \hline
+    10 & Be able to directly open a document from the search in MonkeyPuzzle & Won't\\
     \hline
     \end{tabular}
     \caption{MoSCoW}
@@ -313,6 +326,12 @@ Shown below is the MoSCoW requirements analysis that has been preformed for this
 
 \subsection{Development Methodology}
 
+\subsubsection{Methodology Comparison}
+
+\paragraph{Conclusion}\mbox{}\\
+
+\subsubsection{Waterfall Methodology in relation to the Project}
+
 \newpage
 \section{Design}
 
@@ -321,53 +340,93 @@ Shown below is the MoSCoW requirements analysis that has been preformed for this
 \newpage
 \section{Implementation}
 
+\subsection{Reasoning For Choices}
+
+\subsubsection{Python}
+
+Python was chosen for this project for a number of reasons. Python is designed to be simple to write, making it ideal for prototypes and small projects. As the project required a short development cycle, Python is appropriate.
+
+Python also has support for a wide range of libraries. Previous to this project, a Python library for producing SADFace formatted documents had been created\footnote{\url{https://github.com/siwells/SADFace}}. Additionally, as the software required a web component, which Flask would be suitable for, the whole application was developed in Python so code could be shared amongst the two applications if required.
+
+\subsubsection{MongoDB}
+
+For this project, a database would need to be used to store the produced SADFace documents. Since SADFace documents can elements that can vary, such as metadata category names, the number of nodes and number of edges, a flexible database solution was required. As the SADFace format is based on JSON, a NoSQL database solution would be most appropriate. 
+
+MongoDB was chosen as the database software that would be used in this implementation due to it being a flexible, NoSQL database solution with existing drivers allowing it to easily interface with Python and Elasticsearch.
+
+\subsubsection{Reddit}
+
+Reddit (specifically the `subreddit'; ``changemyview'') was chosen to be the source of sample data for this project. Due to the nature of a social networking website such as Reddit, users are constantly producing new content which can be used as sample data resulting in there being no shortage of new data to test with.
+
+Additionally, since Reddit posts are sorted by category, and a category exists solely for arguments meaning there would be no need to filter through the gathered data to determine if or if not the text was an argument, saving a large amount of time that can be focused on other areas of the project. As the category is arguments of any topic, a wide array of topics were covered in the testing data.
+
+There were a small number of disadvantages of using Reddit as the source of sample data for the project. One of which is no guarantee of correct spelling and grammar.  Incorrect spelling and grammar would have an effect on the argument mining processing, causing the miner to either miss arguments which have been made, or falsely identify arguments were an argument isn't made. This disadvantage is minimised however by Reddit's ``reddiquette'' document\footnote{The ``reddiquette'' document is a list of etiquette standards expected of those who post on the site.} which encourages users to ``Use proper grammar and spelling''.
+
+Another disadvantage is that posts users make can be edited by the user. In accordance with the ``reddiquette'' document, edited posts should include a section at the start or end of the post with ``Edit:'' followed by the changes made to the post so that it is clear to users how the post has been changed. Users also use edit feature to address questions or queries that have occurred frequently as a result of their post so that further community members do not ask the same question in a similar format to the ``Edit:'' etiquette. This ``Edit:'' (and similar sections) lead to false positives during the argument identification stage of the mining process.
+
+\subsection{Tools Used During Implementation}
+
+\subsubsection{PyCharm}
+
+PyCharm is an IDE used for writing Python scripts. It allows for a sand-boxed environment for libraries and supports debugging tools. PyCharm additionally integrates with version control to track changes that have been made to documents within a project. 
+
+\subsubsection{Version Control}
+
+For this project, GitHub was used as version control software for this project. It allows for a backup of the project files, as well as a history of changes for each file. GitHub also features issue tracking which can be used to track existing bugs and request features.
+
+\subsection{The Produced Software}
+
 The implementation of this project has been split into two halves, known as ``Stripmine-Script'' and ``Stripmine-Site''. Stripmine-Script acts as a modular python script which takes in bodies of text from a source, such as the internet or books, runs the text through an argument miner, compiles the data into the SADFace format and inserts the resulting SADFace document into a database. Stripmine-Site is a Flask web-app search tool which uses full-text indexing to search and display relevant data from the database.\newline
 
 [INSERT FLOWCHART HERE]\newline
 
-\subsection{Stripmine-Script}
+\subsubsection{Stripmine-Script}
 
 This script houses four modules which can be interchanged to suit the requirements of the user. These modules are a Spider, Miner, Parser and Database. Each module exists as a python class which inherits from an abstract base class. Each of the base classes include information on how they are to be used, what to expect as inputs from the previous step in the chain, and what to output to be compatible with the next step in the chain. 
 
 For this project, four modules have been developed and implementation to demonstrate how the software functions.
 
-\subsubsection{Spider}
+\paragraph{Spider}\mbox{}\\
 
 The Spider class is the first module in the chain. This module obtains text from a source as well as any metadata associated with the source. The data is written to an instance of SpiderExtract, and the Spider module outputs a list of SpiderExtract items.
 
 For this implementation the Spider accesses the Reddit API for the ``changemyview'' section\footnote{https://www.reddit.com/r/changemyview}. It obtains posts made in this section, then collects the text of these posts and relating metadata such as a link to the post, the authors username, and title of the post. The module takes this data and assigns the text and metadata to the SpiderExtract class and appends it to a list to be returned once the Spider has finished. 
 
-\subsubsection{Miner}
+\paragraph{Miner}\mbox{}\\
 
 The Miner class accepts text gathered by the spider and runs the text through an argument miner. The argument takes this text and attempts to identify any arguments made in the text. Depending on the argument miner used, different data may be obtained. Once the argument miner has finished processing, the data is serialised into JSON format.
 
-For this project MARGOT\footnote{http://margot.disi.unibo.it/} was used to identify and classify arguments.
+For this project MARGOT\footnote{\url{http://margot.disi.unibo.it/}} was used to identify and classify arguments.
 
-\subsubsection{Parser}
+\paragraph{Parser}\mbox{}\\
 
 The Parser class works in tandem with the Miner class and an appropriate parser will need to be developed to match the miner used. The parser receives the JSON from the miner and converts the data into the SADFace format. Due to the variety of ways the miner could produce data, a parser will have to be developed to suit the data produced by the miner.
 
-\subsubsection{Database}
+\paragraph{Database}\mbox{}\\
 
 The Database module takes the resulting SADFace document and inserts it into a database. For this projects implmentation MongoDB was used.
 
-\subsection{Stripmine-Site}
+\subsubsection{Monstache}
+
+Monstache\footnote{\url{https://rwynn.github.io/monstache-site/}} is a open source tool that allows a MongoDB collection to be synchronised with an instance of Elasticsearch. This tool acts an a connector between the database from the script and the full-text indexing tool used in the site. 
+
+\subsubsection{Stripmine-Site}
 
 Stripmine-Site is a Flask web-app used for displaying the contents of the database containing SADFace formatted documents. The site consists of three pages, a home page, a search results page, and a document page.
 
-\subsubsection{Home Page}
+\paragraph{Home Page}\mbox{}\\
 
 The home page acts as the root of the web app. This page allows the user to enter a term to search the database for as well as filter for specific categories of arguments. The form uses a POST request to submit the data to the results page for searching.
 
 [INCLUDE PICTURE]
 
-\subsubsection{Results Page}
+\paragraph{Results Page}\mbox{}\\
 
 This page shows the results based on the terms specified in the search that was POSTed. The results are displayed using a Bootstrap ``accordion''. The text is retrieved from the database using full-text indexing through Elasticsearch\footnote{https://www.elastic.co/}. From this page, the user can browse the arguments, view the metadata associated with the arguments presented, and further refine their search. For each of the arguments, the user can be directed to the SADFace document which it is contained within through the document page. Since the page functions primarily through a POST request, if a GET request is received the user is redirected to the home page.
 
 [INCLUDE PICTURE]
 
-\subsubsection{Document Page}
+\paragraph{Document Page}\mbox{}\\
 
 The document page shows the full metadata and a list of all the arguments presented within a SADFace document. The associated metadata is presented at the top in a programmatically generated table displaying every metadata field and value. The arguments are presented below in the same manner as is used for the results page. A link is provided to download the SADFace document for further work in an application such as Monkeypuzzle\footnote{http://arg.napier.ac.uk/monkeypuzzle/}. 
 
@@ -453,6 +512,18 @@ The document page shows the full metadata and a list of all the arguments presen
 \bibitem{hanson16}
   Hanson, J. (2016). Reddit. In \textit{The social media revolution: an economic encyclopedia of friending, following, texting, and connecting} (pp. 299-300). Retreved from https://www.vlebooks.com/vleweb/Product/Index/852303?page=0
   
+\bibitem{python19}
+  Wiki.python.org. (2019). \textit{Python}. [online] Available at: https://wiki.python.org/moin/BeginnersGuide/Overview [Accessed 26 Jul. 2019].
+  
+\bibitem{pypi19}
+  Pypi.org. (2019). \textit{PyPI}. [online] Available at: https://pypi.org/ [Accessed 26 Jul. 2019].
+  
+\bibitem{mongo19}
+  Mongodb.com. (2019). \textit{MongoDB}. Available at: https://www.mongodb.com/what-is-mongodb [Accessed 26 Jul. 2019].
+  
+\bibitem{elastic19}
+  Elastic.co. (2019). \textit{Elastic}. Available at: https://www.elastic.co/what-is/elasticsearch [Accessed 26 Jul. 2019].
+ 
 \bibitem{bootstrap19}
   Getbootstrap.com. (2019). \textit{Bootstrap}. [online] Available at: https://getbootstrap.com/ [Accessed 11 Feb. 2019].
 
