@@ -17,6 +17,9 @@
 \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 
 \usepackage{url}
+\usepackage{pdfpages}
+\usepackage{verbatim}
+\usepackage{float}
 
 %%% PACKAGES
 \usepackage{booktabs} % for much better looking tables
@@ -95,38 +98,49 @@ Insert acknowledgements here
 \section{Introduction}
 
 \subsection{Background}
-Research into argumentation has become a topic of interest in AI. The target audience for the deliverables is to assist those who are researching and developing software involving argumentation. The importance of this project is so that researchers can have a tool to analyse text for arguments and work directly with a format compatible with existing tools for working with arguments.\newline
+The Google Books database\footnote{\url{https://books.google.com}} contains scans of approximately 25 million books, and with non-fiction making up a portion of that figure, a large number of opinions and views on an extensive variety of topics is contained within them (Somers, 2017). In the field of linguistics, the presentation of claims and evidence forms the basis of what is referred to as an ``arguement''. Although identifying arguments can be a relatively trivial job for a human, it would be infeasible to have a project attempting to catalogue every argument ever made in written text. To have a software solution that is able to identify arguments accurately would make this goal far more feasible, and as a result, research into argumentation has become a topic of interest in AI.
+
+The target audience for the deliverables is to assist those who are researching and developing software involving argumentation. The importance of this project is so that researchers can have a software solution to facilitate the analysis of text for arguments from a source and work directly with a format compatible with existing tools for working with arguments.\newline
 
 \subsection{Aim and Objectives}
-The aim of this project is to develop a Python application that will be able to perform argument mining, by analysing text and to identify the components of arguments. The goal is to be able to spider through the internet and obtain the text from various websites. The aim of this project is that the software created from it will be able to work using the same SADFace format used in many other argumentation-based applications used in Napier University. In order to achieve this aim, the following objectives must be met:\newline
+The first aim of this dissertation is to provide a background of argumentation in natural language. To achieve this aim, this dissertation will explain key concepts through a literature and technical review. As the subject of argumentation is an extensive area of research in linguistics, the topic will only be covered in as much detail as is required as to provide adequate content for argumentation in this project.
+
+The second aim of this project is to develop an application to facilitate argument mining from a source of text, parse the results into a standard format (SADFace) used by Edinburgh Napier University, and present the results for use by argumentation researchers in other SADFace compliant applications. In order to achieve this aim, the following objectives must be met:
+\begin{itemize}
+    \item Project management techniques will need to be reviewed and an appropriate technique will be selected to form a structure for this project.
+    \item A modular Python application will be developed that obtains text from a source such as a web API, facilitates argument mining software which analyses the text to identify the components of arguments, converts the produced data into the SADFace format, and inserts the standardised documents into a database for later use.
+    \item A Python Flask web application which implements full-text indexing to provide a GUI to browse the database of SADFace formatted documents for use by researchers.
+\end{itemize}
+
 \subsection{Scope of the project}
+
+The scope of this project is to develop a modular application which can facilitate argument mining software by obtaining text from a source, parsing it into a standard format, and inserting the documents into a database to be browsed through a web based GUI. Due to the complexity of developing argument mining software it is not feasible to develop argument mining software within the timescale of this project. Additionally research in argument mining software is ongoing and improvements are being made to existing solutions as well as new solutions being developed. By designing this application in a modular implementation to facilitate argument mining software, this project works to future-proof itself as new and improved argument mining software solutions will be compatible with this project if a suitable module is developed for it.
 
 \subsection{Structure of the dissertation}
 
+The first half of the dissertation establishes context for the project. Concepts and technologies are explored with reference to literature which provide the groundwork for the areas covered in this project. The second half of the dissertation explores the stages of the software development life-cycle.
+
+Chapter 2 explorers literature relating to argumentation and helps us define what an argument is. Chapter 3 explores technology used in argument mining software as well as software used in the implementation of this project. Chapter 4 showcases project management decisions and actions made at the start of the project, such as deciding on the development methodology and requirements analysis. Chapter 5 covers the design and software implementation of the project. Chapter 6 provides an evaluation on the decisions made in relation to project management as well as the work done as part of the implementation. Chapter 7 provides a conclusion to this dissertation, evaluating if and how the aims set in this chapter have been met, as well as covering possible future work and the authors thoughts on this project.
+
 \newpage
 
-\section{Literature Review}
+
+\section{Background}
 
 \subsection{Introduction}
 
-This sections aims to provide the relevant background context for this project. This section will look at Argumentation in natural language, as well as decide on a definition of what will be considered an argument for this project. 
+This sections aims to provide the relevant background context for this project. This section will first look at Argumentation in natural language and decide on a definition of what will be considered an argument for this project. This section will then go on to look at the various technologies associated with this project, such as background on argument mining software, as well as software used in the development of this project.
 
 \subsection{Arguments and Argumentation Theory}
 
 \subsubsection{Defining an argument}
-When working with arguments, it is important to decide upon a strict definition so that we can differentiate what \emph{will} be considered an argument by our definition and what \emph{will not} be considered an argument. Within the context of natural language, an argument is used to portray evidence to either criticise or support a claim (Walton, 2006). \newline
+When working with arguments, it is important to decide upon a strict definition so that we can differentiate what \emph{will} be considered an argument by our definition and what \emph{will not} be considered an argument. Within the context of natural language, an argument is used to portray evidence to either criticise or support a claim (Walton, 2006). 
 
-The structure of arguments is described by Van Eemeren et al. as a ``constellation of expressed thought contents, called \emph{propositions}'' (Van Eemeren et al. 2014. p2). Van Eemeren et al. goes on to suggest that propositions are made up of two connected components. The first component they outline is the ``subject'', which is \emph{what} you are talking about (such as a person, place or item). The second component they outline as the ``predicate'', which is what you are describing the subject \emph{as}. Gilbert presents an example of how this structure can be used in regular speech.\newline
+The structure of arguments is described by Van Eemeren et al. as a ``constellation of expressed thought contents, called \emph{propositions}'' (Van Eemeren et al. 2014. p2). Van Eemeren et al. goes on to suggest that propositions are made up of two connected components. The first component they outline is the ``subject'', which is \emph{what} you are talking about (such as a person, place or item). The second component they outline as the ``predicate'', which is what you are describing the subject \emph{as}. Gilbert presents an example of how this structure can be used in regular speech.
 
-``Eating vegetables is good for you, and since broccoli is a vegetable, it's good for you.''(Gilbert, 2017, p3).\newline
+``Eating vegetables is good for you, and since broccoli is a vegetable, it's good for you.''(Gilbert, 2017, p3).
 
-This example could either be used in support of someone highlighting the qualities of broccoli or to criticise someone providing a negative opinion of broccoli. There are two propositions that can be identified in the example. The first proposition states \emph{``Eating vegetables is good for you''}. Here the subject is \emph{`vegetables'} and the predicate is that \emph{`eating (them) is good for you'}. The second proposition states \emph{``broccoli is a vegetable''}. Here the subject is \emph{`broccoli'} and the predicate is that \emph{`(it) is a vegetable'}.  From here, we can see that the subject of the first proposition is referenced in the predicate of the second proposition, linking the propositions together to form what we have described as an argument. \newline
-
-\subsection{Conclusion}
-
-\newpage
-
-\section{Background}
+This example could either be used in support of someone highlighting the qualities of broccoli or to criticise someone providing a negative opinion of broccoli. There are two propositions that can be identified in the example. The first proposition states \emph{``Eating vegetables is good for you''}. Here the subject is \emph{`vegetables'} and the predicate is that \emph{`eating (them) is good for you'}. The second proposition states \emph{``broccoli is a vegetable''}. Here the subject is \emph{`broccoli'} and the predicate is that \emph{`(it) is a vegetable'}.  From here, we can see that the subject of the first proposition is referenced in the predicate of the second proposition, linking the propositions together to form what we have described as an argument.
 
 \subsection{Natural Language Processing}
 Natural language processing can be defined as creating structured data from unstructured natural text (Kreimeyer et al, 2017). Creating this structured data manually can be at best time consuming, and at worst inconsistent due to the ambiguity that comes as a result of natural language. Martinez outlines that this challenge regarding ambiguity is only amplified when attempting to design a set of rules to interpret the meaning words that can have multiple meanings depending on the surrounding context, known as \emph{'word sense disambiguation'}. For example, if we saw the word \emph{``fly''} on its own, we can't say for certain whether it is referring to the noun (`\emph{fly}' as in \emph{insect}) or the verb (`\emph{fly}' as in \emph{`to fly'}) (Martinez, 2010, p354).\newline
@@ -162,11 +176,11 @@ Correctly classifying named entities which are not catalogued, such as titles of
 
 \subsubsection{Semantic Role Labelling}
 
-
+Semantic Role Labelling, which is a form of Shallow Semantic Parsing, attempts to recognise roles for predicates within a sentence (Che et al, 2008). Roles are assigned to the arguments of a verb using a variety of tags such as agents, patients, location and direction as established in Palmer et al (2005).
 
 \subsection{Argument Mining}
 
-Argument mining is described by Niculae et al as the process of automatically identifying arguments within documents (Niculae et al, 2017). 
+Argument mining is described by Niculae et al as the process of automatically identifying arguments within documents (Niculae et al, 2017).
 
 \subsubsection{MARGOT}
 
@@ -235,7 +249,6 @@ SADFace (Simple Argument Description Format) is a JSON-based document format use
 
 PRAW (Python Reddit API Wrapper) is a Python package which enables simple access to Reddit's API and is complient with Reddit's API rules.
 
-\subsection{Conclusion}
 
 \newpage
 \section{Project Analysis}
@@ -299,7 +312,7 @@ Shown below is the MoSCoW requirements analysis that has been preformed for this
     \hline
     1 & Access the web to retrieve text through an existing API. & Must\\
     \hline
-    2 & Perform argument mining on a text with results being stored in the SADFace format. & Must\\
+    2 & Perform argument mining using existing argument mining software on a text with results being stored in the SADFace format. & Must\\
     \hline
     3 & Store the results in a database. & Must\\
     \hline
@@ -315,7 +328,9 @@ Shown below is the MoSCoW requirements analysis that has been preformed for this
     \hline
     9 & Access the web and retrieve text by identifying bodies of text in web pages. & Could\\
     \hline
-    10 & Be able to directly open a document from the search in MonkeyPuzzle & Won't\\
+    10 & Provide a new argument mining software solution & Won't\\
+    \hline
+    11 & Be able to directly open a document from the search in MonkeyPuzzle & Won't\\
     \hline
     \end{tabular}
     \caption{MoSCoW}
@@ -326,19 +341,65 @@ Shown below is the MoSCoW requirements analysis that has been preformed for this
 
 \subsection{Development Methodology}
 
+For software development projects, there are a number of tried project management techniques which dictate the stages a project will go through during development. Two software development methodologies were selected as suitable for this project, which are ``Waterfall'' and ``Agile''.
+
+\subsubsection{Waterfall Methodology}
+
+The Waterfall software development methodology is a conventional method which follows a set of linear steps, finishing each task before starting the next task (Brindha et al, 2015). The stages in the Waterfall model are as follows:
+
+[INSERT DIAGRAM]
+
+\begin{itemize}
+    \item Requirements analysis
+    \begin{itemize}
+        \item At the start of a project, the stakeholders are identified and the scope of the project is agreed upon.
+    \end{itemize}
+    \item Design
+    \begin{itemize}
+        \item A model is designed to show how the available technology can be used to meet the requirements.
+    \end{itemize}
+    \item Implementation
+    \begin{itemize}
+        \item The designed model is converted into a software implementation.
+    \end{itemize}
+    \item Testing
+    \begin{itemize}
+        \item Testing, such as unit testing and implementation testing are performed on the produced software.
+    \end{itemize}
+    \item Maintenance
+    \begin{itemize}
+        \item Continuous support and fixes are provided to the software depending on the arrangement between the client and the developers.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Agile Methodology}
+
+Agile software development methodologies aim to address the common critiques of traditional development methodologies (Yu et al, 2014). One of the main critiques agile methods tackles is the traditional methods inability to adapt to changing requirements. In agile methods, the time span for the project is broken into ``sprints''.
+
+At the start of a sprint, goals are set as to what features should be implemented during the allotted time for the sprint. At the end of the sprint the implementation of the feature should be complete and is shown to the client for feedback as to what to include in the next sprint.
+
+[INSERT DIAGRAM]
+
 \subsubsection{Methodology Comparison}
+
+Kisielnicki et al (2017) highlights the main objectives of these two methodologies. The traditional method has a focus on processes and relies on static requirements with a linear approach to tasks. The agile method contrasts these and as it has a focus on people and can facilitate changing requirements with a flexible approach to tasks.
+
+[INSERT DIAGRAM]
 
 \paragraph{Conclusion}\mbox{}\\
 
-\subsubsection{Waterfall Methodology in relation to the Project}
+As this project has strict requirements on what \emph{must} be completed for the project to be considered a success, the traditional waterfall methodology was chosen due to its emphasis on the completion of tasks.
+
+There are many apparent weaknesses of the traditional method, such as its inability to adapt to changing requirements and less personal approach. Being a project with a single developer and a planned short development cycle, these weakness should have a minimal impact on the project.
 
 \newpage
-\section{Design}
+\section{Design and Implementation}
 
-\subsection{RESTFul Design}
+\subsection{Initial Design}
 
-\newpage
-\section{Implementation}
+Once the requirements had been established, a design was created to indicate the series of events an existing initial text source would need to be processed through to be able to be found in our argumentation database. As the software was required to be modular to accommodate new technologies in the future, stages were broken into features that could be incorporated and tested individually, and would form a full software solution when linked together.
+
+[INSERT DIAGRAM]
 
 \subsection{Reasoning For Choices}
 
@@ -418,31 +479,99 @@ Stripmine-Site is a Flask web-app used for displaying the contents of the databa
 
 The home page acts as the root of the web app. This page allows the user to enter a term to search the database for as well as filter for specific categories of arguments. The form uses a POST request to submit the data to the results page for searching.
 
-[INCLUDE PICTURE]
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{Report/graphics/home.png}
+    \caption{Search bar from the home page of Stripmine-Site}
+    \label{fig:home}
+\end{figure}
 
 \paragraph{Results Page}\mbox{}\\
 
-This page shows the results based on the terms specified in the search that was POSTed. The results are displayed using a Bootstrap ``accordion''. The text is retrieved from the database using full-text indexing through Elasticsearch\footnote{https://www.elastic.co/}. From this page, the user can browse the arguments, view the metadata associated with the arguments presented, and further refine their search. For each of the arguments, the user can be directed to the SADFace document which it is contained within through the document page. Since the page functions primarily through a POST request, if a GET request is received the user is redirected to the home page.
+This page shows the results based on the terms specified in the search that was POSTed. The results are displayed using a Bootstrap ``accordion''. The text is retrieved from the database using full-text indexing through Elasticsearch\footnote{https://www.elastic.co/}. From this page, the user can browse the arguments, view the metadata associated with the arguments presented, and further refine their search.
+\newline
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{Report/graphics/results-1.png}
+    \caption{Results page in Stripmine-Site}
+    \label{fig:results1}
+\end{figure}
 
-[INCLUDE PICTURE]
+For each of the arguments, the user can be directed to the SADFace document which it is contained within through the document page. Since the page functions primarily through a POST request, if a GET request is received the user is redirected to the home page.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{Report/graphics/results-2.png}
+    \caption{Selected result in results page}
+    \label{fig:results2}
+\end{figure}
+
 
 \paragraph{Document Page}\mbox{}\\
 
-The document page shows the full metadata and a list of all the arguments presented within a SADFace document. The associated metadata is presented at the top in a programmatically generated table displaying every metadata field and value. The arguments are presented below in the same manner as is used for the results page. A link is provided to download the SADFace document for further work in an application such as Monkeypuzzle\footnote{http://arg.napier.ac.uk/monkeypuzzle/}. 
+The document page shows the full metadata and a list of all the arguments presented within a SADFace document. The associated metadata is presented at the top in a programmatically generated table displaying every metadata field and value. The arguments are presented below in the same manner as is used for the results page. A link is provided to download the SADFace document for further work in an application such as Monkeypuzzle\footnote{http://arg.napier.ac.uk/monkeypuzzle/}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{Report/graphics/document.png}
+    \caption{Document Page in Stripmine-Site}
+    \label{fig:document}
+\end{figure}
 
 \newpage
 \section{Evaluation}
+
+\subsection{Analysis of Project Management Technique}
+
+In Chapter 4, two project management techniques, a traditional waterfall methodology and the agile methodology, were reviewed, contrasted, and evaluated to decide which approach would be more suitable for this project.
+
+The traditional waterfall methodology was chosen for this project for several reasons. The first reason was the methods focus on the completion on tasks as this project had many requirements that were essential to the success of this project. Additionally, it was not foreseen that the requirements for the project would change throughout the duration of the project, eliminating one of the key weaknesses of this traditional methods.
+
+This project benefited from using the waterfall methodology through the resulting simplified timeline for the completion of tasks with no concern for reprioritisation leading to a simplified development cycle, allowing for time to be focused on developing the software. As expected, the project's requirements were not changed during the duration of the project.
+
+This project was hindered by using the waterfall methodology due to the lack of ability of being able to return to previous stages in the project lifecycle. As a result, some aspects of the software had a rushed but functional implementation that achieved the associated requirement and little more. Due to this rushed development, testing became minimal and little time remained for documentation.
+
+In conclusion, although the traditional waterfall methodology did facilitate the production of software that met the necessary requirements, the task focused direction of this method resulted in rushed development due to the lack of emphasis of time as a finite resource. 
+
+\subsection{Analysis of Implementation}
+
+At the beginning on the project, stakeholders were identified and requirement analysis was performed to determine what features would be required for the project to reach a minimal level of functionality, as well as establishing what would be done if there was available time and what was considered out-of-scope for the project.
+
+The implementation was able to stay in line with the original proposed design of the project and meet not only the core requirements of the project, but was also able to implement a small number of improvements from other requirements.
+
+In conclusion, this implementation can be considered successful as it met it's original aim, although it lacks some features that would have been more beneficial to include.
 
 \newpage
 \section{Conclusion}
 
 \subsection{Goals}
 
+At this stage of the dissertation, the original aims of the projects and how these aims were met will be considered as an indication to the success of this project.
+
+The first aim of this project was to provide a background on argumentation in natural language. To achieve this aim, many sources of literature covering argumentation were considered and as a result a definition of an argument was established. Additionally, the technologies behind argument mining software, such as natural language processing were explored and explained to provide a context on what the argument mining software is doing as it was out of the scope of this project.
+
+The second aim of this project was to develop an application to extract arguments from a source text, convert the arguments into SADFace format and insert the documents into a database for later use through the web application by facilitating existing argument mining software. To achieve this aim two suitable project management techniques were reviewed and compared. The chosen technique was used throughout the development of the project and a software solution was created. This was evaluated by how well the project management technique used worked for this project as well as the projects ability to meet the requirements established in the requirements analysis stage. Based on the evaluation performed in Chapter 6, this aim has been met.
+
 \subsection{Future Work}
+
+In the requirements analysis stage of the project, many requirements we're identified and although all of the necessary requirements were met, there are still a number of features that would improve the project and help increase the longevity of the project. For example, using the SADFace library to parse data into the SADFace document format would remove the need for all the parser modules requiring updating in the event of a change to the SADFace document format structure.
+
+For the web app, an addition that would help future developments would be to implement an API to access the database so that future projects can programatically access the data store remotely.
+
+Finally, due to limitations of current argument mining software, the produced SADFace document lacks information that needs to be inserted. For example, although the argument mining software used in this project, MARGOT, is able to identify claims and evidence, which appear as nodes in the graph, linking edges are not produced to connect claims with appropriate evidence and vice versa. Since it may be some time before argument mining software advances to be able to connect claims with evidence, further developments could be made to integrate Monkeypuzzle with Stripmine so that the researcher can create the edges without needing to download the SADFace document onto their computing and then upload the document into Monkeypuzzle, to then download the new document and insert into the database. By being able to edit the document found in Stripmine with Monkeypuzzle and being able to save the document to the database through Monkeypuzzle would streamline the researchers work significantly.
+
+With the software produced as part of this project is open source, this leaves room for other developers to make further developments on their own and become integrated into Edinburgh Napier University's argumentation research software repository.
+
+\subsection{Personal Statement}
+
+Although it has been challenging, it is extremely satisfying to have written a dissertation on this topic. The main difficulty I faced during this project was the initial research, as argumentation is such an extensive topic it was hard to decide where to start and where to stop with researching argumentation. I am pleased with the approach that I took to the software development portion of this project as well as the functionality of the software produced. It was a great benefit to have already had experience with some of the main technologies used within this project which allowed for more time to be allocated to research and writing. If I were to redo this project I would have placed a stronger emphasis on time management as well as taking more time to consider each stage of the project in more detail.
 
 
 \newpage
 \begin{thebibliography}{9}
+
+\bibitem{somers17}
+  Somers, J. (2017, April 20). \textit{Torching the Modern-Day Library of Alexandria}. Retrieved from https://www.theatlantic.com/technology/archive/2017/04/the-tragedy-of-google-books/523320/
 
 \bibitem{walton06}
   Walton, D. (2006).
@@ -473,7 +602,7 @@ The document page shows the full metadata and a list of all the arguments presen
   
 \bibitem{collobert11}
   Collobert, R., Weston, J., Bottou, L., Karlen, M., Vavukcuoglu, K., \& Kuksa, P. (2011).
-  Natural Language Processing (Almost) from Scratch \textit{Journal of Machine Learning Research, 12}(Aug), 2493-2537.
+  Natural Language Processing (Almost) from Scratch. In \textit{Journal of Machine Learning Research, 12}(Aug), 2493-2537.
 
 \bibitem{sang03}
   Tjong Kim Sang, E. F., \& De Meulder, F. (2003). Introduction to the CoNLL-2003 shared task: Language-independent named entity recognition. In \textit{Proceedings of the seventh conference on Natural language learning at HLT-NAACL 2003-Volume 4} (pp. 142-147). Association for Computational Linguistics.
@@ -487,8 +616,14 @@ The document page shows the full metadata and a list of all the arguments presen
 \bibitem{chieu02}
   Chieu, H. L., \& Ng. H. T. (2002). Named entity recognition: a maximum entropy approach using global information. In \textit{Proceedings of the 19th international conference on Computational linguistics-Volume 1} (pp. 1-7). Association for Computational Linguistics.
   
+\bibitem{palmer05}
+  Palmer, M., Gildea, D., \& Kingsbury, P. (2005). The proposition bank: An annotated corpus of semantic roles. In \textit{Computational linguistics, 31(1)}, (pp. 71-106).
+  
 \bibitem{downey10}
   Downey, D., Etzioni, O., \& Soderland, S. (2010). Analysis of a probabilistic model of redundancy in unsupervised information extraction. In \textit{Artificial Intelligence, 174} (pp. 726-748). Elsevier.
+  
+\bibitem{che08}
+  Che, W., Zhang, M., Aw, A., Tan, C., Liu, T., \& Li, S. (2008). Using a Hybrid Convolution Tree Kernel for Semantic Role Labeling. In \textit{ACM Transactions on Asian Language Information Processing Volume 7 Issue 4}. ACM.
 
 \bibitem{ritter11}
   Ritter, A., Clark, S., \& Etzioni, O. (2011).
@@ -535,7 +670,15 @@ The document page shows the full metadata and a list of all the arguments presen
 
 \bibitem{miranda11}
   Miranda, E. (2011). Time boxing planning: Buffered moscow rules. \textit{ACM SIGSOFT Software Engineering Notes, 36}(6), 1-5.
-
+  
+\bibitem{brindha15}
+  Brindha, J., \& Vijayakumar, V. (2015). Analytical comparison of waterfall model and object-oriented methodology in software engineering. Advances in Natural and Applied Sciences, 9(12), 7.
+  
+\bibitem{yu14}
+  Yu, X., \& Petter, S. (2014). Understanding agile software development practices using shared mental models theory. Information and Software Technology, 56(8), 911-921.
+  
+\bibitem{kisielnicki17}
+  Kisielnicki, J., \& Misiak, A. (2017). EFFECTIVENESS OF AGILE COMPARED TO WATERFALL IMPLEMENTATION METHODS IN IT PROJECTS: ANALYSIS BASED ON BUSINESS INTELLIGENCE PROJECTS. Foundations of Management, 9(1), 273-286.
 \end{thebibliography}
 %example of References. See https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
 %might be good to use a separate document for these so your main work is not one really long text file. 
@@ -545,18 +688,21 @@ The document page shows the full metadata and a list of all the arguments presen
 \begin{appendices}
 \section{Project Overview}
 %insert IPO
+\includegraphics[scale=0.22]{Report/graphics/IPO-1.png}
+\newpage
+\includegraphics[scale=0.25]{Report/graphics/IPO-2.png}
 
-\begin{subappendices}
-\subsection{Example sub appendices}
-...
-\end{subappendices}
-
+\newpage
 \section{Second Formal Review Output}
-Insert a copy of the project review form you were given at the end of the review by the second marker
+\includegraphics[scale=0.25]{Report/graphics/Review-1.png}
+\newpage
+\includegraphics[scale=0.25]{Report/graphics/Review-2.png}
 
+\newpage
 \section{Diary Sheets (or other project management evidence)}
 Insert diary sheets here together with any project management plan you have
 
+\newpage
 \section{Appendix 4 and following}
 insert content here and for each of the other appendices, the title may be just on a page by itself, the pages of the appendices are not numbered, unless an included document such as a user manual or design document is itself pager numbered.
 \end{appendices}
