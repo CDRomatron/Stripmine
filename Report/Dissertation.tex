@@ -72,7 +72,9 @@
 
 %LaTeX let you define the abstract separately so it wont get sucked into the main document.
 \begin{abstract}
+Discovering claims and evidence within a written argument can be a relatively trivial task for a human on a small scale, however to catalogue a large number of written arguments would require a different approach. Due to the diversity of arguments that can be made, identifying arguments programatically can prove a difficult task. However, software solutions are beginning to exist to attempt to tackle this problem. To use these solutions to catalogue large quantities of arguments from non-fiction text would provide researchers with an extensive amount of claims and evidence in a variety of topics.
 
+The aim of this dissertation is to explore the development of a software solution to obtain text, while also using an existing argument mining software to identify arguments. These arguments will then be converted into a standardised format to be stored and used by researchers. The software development methodology used and produced software are evaluated based on the aims of the project.
 \end{abstract}
 \pagebreak
 
@@ -89,16 +91,17 @@
 \newpage
 
 \section*{Acknowledgements}
-Insert acknowledgements here
 \subsection*{}
-	I would like to thank my cat, dog and family.
+	I would like to thank the staff at Edinburgh Napier University, including Simon Wells for suggesting and supervising this project, Dimitra Gkatzia for being a supportive programme leader throughout my studies, and the Wellbeing team for assisting me during my final year.
+	
+	I would also like to give a big thanks to my family for supporting me and encouraging me to do well, my friends helping uplift me, and my girlfriend for always believing in me and for taking care of me during the difficult points of this project.
 \newpage
 
 
 \section{Introduction}
 
 \subsection{Background}
-The Google Books database\footnote{\url{https://books.google.com}} contains scans of approximately 25 million books, and with non-fiction making up a portion of that figure, a large number of opinions and views on an extensive variety of topics is contained within them (Somers, 2017). In the field of linguistics, the presentation of claims and evidence forms the basis of what is referred to as an ``arguement''. Although identifying arguments can be a relatively trivial job for a human, it would be infeasible to have a project attempting to catalogue every argument ever made in written text. To have a software solution that is able to identify arguments accurately would make this goal far more feasible, and as a result, research into argumentation has become a topic of interest in AI.
+The Google Books database\footnote{\url{https://books.google.com}} contains scans of approximately 25 million books, and with non-fiction making up a portion of that figure, a large number of opinions and views on an extensive variety of topics is contained within them (Somers, 2017). In the field of linguistics, the presentation of claims and evidence forms the basis of what is referred to as an ``argument''. Although identifying arguments can be a relatively trivial job for a human, it would be infeasible to have a project attempting to catalogue every argument ever made in written text. To have a software solution that is able to identify arguments accurately would make this goal far more feasible, and as a result, research into argumentation has become a topic of interest in AI.
 
 The target audience for the deliverables is to assist those who are researching and developing software involving argumentation. The importance of this project is so that researchers can have a software solution to facilitate the analysis of text for arguments from a source and work directly with a format compatible with existing tools for working with arguments.\newline
 
@@ -120,7 +123,15 @@ The scope of this project is to develop a modular application which can facilita
 
 The first half of the dissertation establishes context for the project. Concepts and technologies are explored with reference to literature which provide the groundwork for the areas covered in this project. The second half of the dissertation explores the stages of the software development life-cycle.
 
-Chapter 2 explorers literature relating to argumentation and helps us define what an argument is. Chapter 2 goes on to explores technology used in argument mining software as well as software used in the implementation of this project. Chapter 3 showcases project management decisions and actions made at the start of the project, such as deciding on the development methodology and requirements analysis. Chapter 4 covers the design and software implementation of the project. Chapter 5 provides an evaluation on the decisions made in relation to project management as well as the work done as part of the implementation. Chapter 6 provides a conclusion to this dissertation, evaluating if and how the aims set in this chapter have been met, as well as covering possible future work and the authors thoughts on this project.
+Chapter 2 explorers literature relating to argumentation and helps us define what an argument is. Chapter 2 goes on to explores technology used in argument mining software as well as software used in the implementation of this project.
+
+Chapter 3 showcases project management decisions and actions made at the start of the project, such as deciding on the development methodology and requirements analysis.
+
+Chapter 4 covers the design and software implementation of the project.
+
+Chapter 5 provides an evaluation on the decisions made in relation to project management as well as the work done as part of the implementation.
+
+Chapter 6 provides a conclusion to this dissertation, evaluating if and how the aims set in this chapter have been met, as well as covering possible future work and the authors thoughts on this project.
 
 \newpage
 
@@ -199,7 +210,7 @@ MARGOT (Mining ARGuments frOm Text) is an argument mining system which uses mach
 
 \paragraph{Hidden Markov Model}\mbox{}\\
 
-A Hidden Markov Model (HMM) is a tool which has seen application in part-of-speech tagging (Kupiec, 1992). Markov models are used for representing a finite number of states with varying probability. Within the context of part-of-speech tagging, the Markov model is used for determining the category of a word. Unlike a traditional Markov model which would be trained using a corups consisting for tagged words, a \emph{hidden} Markov model is trained using a corpus of untagged words and relies on the application is an additional algorithm such as the Baum-Welch algorithm\footnote{\url{https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-410-principles-of-autonomy-and-decision-making-fall-2010/lecture-notes/MIT16_410F10_lec21.pdf}}.
+A Hidden Markov Model (HMM) is a tool which has seen application in part-of-speech tagging (Kupiec, 1992). Markov models are used for representing a finite number of states with varying probability. Within the context of part-of-speech tagging, the Markov model is used for determining the category of a word. Unlike a traditional Markov model which would be trained using a corups consisting for tagged words, a \emph{hidden} Markov model is trained using a corpus of untagged words and relies on the application is an additional algorithm such as the Baum-Welch algorithm\footnote{The Baum-Welch algorithm is used to determine the critical point of likelihood in a Hidden Markov Model (Frazzoli, 2010).}.
 
 \paragraph{HMM using Support Vector Machine}\mbox{}\\
 
@@ -223,7 +234,7 @@ MongoDB is a NoSQL database program which allows for the storage of flexible JSO
 
 \subsection{Elasticsearch}
 
-Elasticsearch is an open source search engine which is capable of searching a wide array of data types. Elasticsearch uses an \emph{`inverted index'}\footnote{\url{http://www.dcs.bbk.ac.uk/~dell/teaching/cc/book/ditp/ditp_ch4.pdf} EXPAND IN APPENDIX} data structure to perform full-text indexing to find every unique word in a document and all documents a word occurs in (elastic.co, 2019). 
+Elasticsearch is an open source search engine which is capable of searching a wide array of data types. Elasticsearch uses an \emph{`inverted index'}\footnote{A data structure that maps a search term to a set of documents that contain the search term (Cutting et al, 1990).} data structure to perform full-text indexing to find every unique word in a document and all documents a word occurs in (elastic.co, 2019). 
 
 \subsection{Web Frameworks}
 
@@ -439,7 +450,7 @@ Python also has support for a wide range of libraries. Previous to this project,
 
 \subsubsection{MongoDB}
 
-For this project, a database would need to be used to store the produced SADFace documents. Since SADFace documents can elements that can vary, such as metadata category names, the number of nodes and number of edges, a flexible database solution was required. As the SADFace format is based on JSON, a NoSQL database solution would be most appropriate. 
+For this project, a database would need to be used to store the produced SADFace documents. Since key-value pairs of a SADFace document can vary, such as metadata category names, the number of nodes and number of edges, a flexible database solution was required. As the SADFace format is based on JSON, a NoSQL database solution would be most appropriate. 
 
 MongoDB was chosen as the database software that would be used in this implementation due to it being a flexible, NoSQL database solution with existing drivers allowing it to easily interface with Python and Elasticsearch.
 
@@ -483,6 +494,13 @@ For this project, four modules have been developed and implementation to demonst
 \paragraph{Spider}\mbox{}\\
 
 The Spider class is the first module in the chain. This module obtains text from a source as well as any metadata associated with the source. The data is written to an instance of SpiderExtract, and the Spider module outputs a list of SpiderExtract items.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Report/graphics/ABC.png}
+    \caption{Spider abstract base class}
+    \label{fig:ABC}
+\end{figure}
 
 For this implementation the Spider accesses the Reddit API for the ``changemyview'' section\footnote{https://www.reddit.com/r/changemyview}. It obtains posts made in this section, then collects the text of these posts and relating metadata such as a link to the post, the authors username, and title of the post. The module takes this data and assigns the text and metadata to the SpiderExtract class and appends it to a list to be returned once the Spider has finished. 
 
@@ -670,6 +688,9 @@ Although it has been challenging, it is extremely satisfying to have written a d
   
 \bibitem{kupiec99}
   Kupiec, J. (1992). Robust part-of-speech tagging using a hidden Markov model. \textit{Computer Speech \& Language, 6}(3), 225-242.
+  
+\bibitem{frazzoli10}
+  Frazzoli, E. (2010). \textit{16.410/413 Principles of Autonomy and Decision Making, Lecture 21:  Intro to Hidden Markov Models the Baum-Welch algorithm} [PowerPoint Slides]. Retrieved from https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-410-principles-of-autonomy-and-decision-making-fall-2010/lecture-notes/MIT16\_410F10\_lec21.pdf
 
 \bibitem{joachims98}
   Joachims, T. (1998, April). Text categorization with support vector machines: Learning with many relevant features. In \textit{European conference on machine learning} (pp. 137-142). Springer, Berlin, Heidelberg.
@@ -688,6 +709,9 @@ Although it has been challenging, it is extremely satisfying to have written a d
   
 \bibitem{mongo19}
   Mongodb.com. (2019). \textit{MongoDB}. Available at: https://www.mongodb.com/what-is-mongodb [Accessed 26 Jul. 2019].
+  
+\bibitem{cutting90}
+  Cutting, D. R., \& Pedersen, J. O. (1990, September). Optimizations for Dynamic Inverted Index Maintenance. In SIGIR (Vol. 90, pp. 405-411).
   
 \bibitem{elastic19}
   Elastic.co. (2019). \textit{Elastic}. Available at: https://www.elastic.co/what-is/elasticsearch [Accessed 26 Jul. 2019].
@@ -745,12 +769,13 @@ Although it has been challenging, it is extremely satisfying to have written a d
 \newpage
 \end{subappendices}
 \newpage
-\section{Diary Sheets (or other project management evidence)}
-Insert diary sheets here together with any project management plan you have
-
+\section{Meeting Diary}
+\includegraphics[scale=0.25]{Report/graphics/diary-1.png}
 \newpage
-\section{Appendix 4 and following}
-insert content here and for each of the other appendices, the title may be just on a page by itself, the pages of the appendices are not numbered, unless an included document such as a user manual or design document is itself pager numbered.
+\includegraphics[scale=0.25]{Report/graphics/diary-2.png}
+\newpage
+\includegraphics[scale=0.25]{Report/graphics/diary-3.png}
+
 \end{appendices}
 
 \end{document}
