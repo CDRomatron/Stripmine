@@ -120,7 +120,7 @@ The scope of this project is to develop a modular application which can facilita
 
 The first half of the dissertation establishes context for the project. Concepts and technologies are explored with reference to literature which provide the groundwork for the areas covered in this project. The second half of the dissertation explores the stages of the software development life-cycle.
 
-Chapter 2 explorers literature relating to argumentation and helps us define what an argument is. Chapter 3 explores technology used in argument mining software as well as software used in the implementation of this project. Chapter 4 showcases project management decisions and actions made at the start of the project, such as deciding on the development methodology and requirements analysis. Chapter 5 covers the design and software implementation of the project. Chapter 6 provides an evaluation on the decisions made in relation to project management as well as the work done as part of the implementation. Chapter 7 provides a conclusion to this dissertation, evaluating if and how the aims set in this chapter have been met, as well as covering possible future work and the authors thoughts on this project.
+Chapter 2 explorers literature relating to argumentation and helps us define what an argument is. Chapter 2 goes on to explores technology used in argument mining software as well as software used in the implementation of this project. Chapter 3 showcases project management decisions and actions made at the start of the project, such as deciding on the development methodology and requirements analysis. Chapter 4 covers the design and software implementation of the project. Chapter 5 provides an evaluation on the decisions made in relation to project management as well as the work done as part of the implementation. Chapter 6 provides a conclusion to this dissertation, evaluating if and how the aims set in this chapter have been met, as well as covering possible future work and the authors thoughts on this project.
 
 \newpage
 
@@ -247,7 +247,7 @@ SADFace (Simple Argument Description Format) is a JSON-based document format use
 
 \subsubsection{PRAW}
 
-PRAW (Python Reddit API Wrapper) is a Python package which enables simple access to Reddit's API and is complient with Reddit's API rules.
+PRAW (Python Reddit API Wrapper) is a Python package which enables simple access to Reddit's API and is compliant with Reddit's API rules.
 
 
 \newpage
@@ -333,7 +333,7 @@ Shown below is the MoSCoW requirements analysis that has been preformed for this
     11 & Be able to directly open a document from the search in MonkeyPuzzle & Won't\\
     \hline
     \end{tabular}
-    \caption{MoSCoW}
+    \caption{MoSCoW requirements prioritisation}
     \label{table:1}
 \end{table}
 
@@ -347,7 +347,12 @@ For software development projects, there are a number of tried project managemen
 
 The Waterfall software development methodology is a conventional method which follows a set of linear steps, finishing each task before starting the next task (Brindha et al, 2015). The stages in the Waterfall model are as follows:
 
-[INSERT DIAGRAM]
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{Report/graphics/waterfall.png}
+    \caption{Flowchart of Waterfall method}
+    \label{fig:waterfall}
+\end{figure}
 
 \begin{itemize}
     \item Requirements analysis
@@ -378,13 +383,31 @@ Agile software development methodologies aim to address the common critiques of 
 
 At the start of a sprint, goals are set as to what features should be implemented during the allotted time for the sprint. At the end of the sprint the implementation of the feature should be complete and is shown to the client for feedback as to what to include in the next sprint.
 
-[INSERT DIAGRAM]
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{Report/graphics/agile.png}
+    \caption{Flowchart of Agile method}
+    \label{fig:agile}
+\end{figure}
 
 \subsubsection{Methodology Comparison}
 
 Kisielnicki et al (2017) highlights the main objectives of these two methodologies. The traditional method has a focus on processes and relies on static requirements with a linear approach to tasks. The agile method contrasts these and as it has a focus on people and can facilitate changing requirements with a flexible approach to tasks.
 
-[INSERT DIAGRAM]
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|}
+    \hline
+    Methodology & Fixed values & Variable values\\
+    \hline
+    Traditional & Features & Time and Cost\\
+    \hline
+    Agile & Time and Cost & Features \\
+    \hline
+    \end{tabular}
+    \caption{Comparison of values of methodologies}
+    \label{table:2}
+\end{table}
 
 \paragraph{Conclusion}\mbox{}\\
 
@@ -399,7 +422,12 @@ There are many apparent weaknesses of the traditional method, such as its inabil
 
 Once the requirements had been established, a design was created to indicate the series of events an existing initial text source would need to be processed through to be able to be found in our argumentation database. As the software was required to be modular to accommodate new technologies in the future, stages were broken into features that could be incorporated and tested individually, and would form a full software solution when linked together.
 
-[INSERT DIAGRAM]
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{Report/graphics/design.png}
+    \caption{Original proposed design of Stripmine}
+    \label{fig:design}
+\end{figure}
 
 \subsection{Reasoning For Choices}
 
@@ -439,7 +467,12 @@ For this project, GitHub was used as version control software for this project. 
 
 The implementation of this project has been split into two halves, known as ``Stripmine-Script'' and ``Stripmine-Site''. Stripmine-Script acts as a modular python script which takes in bodies of text from a source, such as the internet or books, runs the text through an argument miner, compiles the data into the SADFace format and inserts the resulting SADFace document into a database. Stripmine-Site is a Flask web-app search tool which uses full-text indexing to search and display relevant data from the database.\newline
 
-[INSERT FLOWCHART HERE]\newline
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.66]{Report/graphics/newdesign.png}
+    \caption{Design of Stripmine in the produced software}
+    \label{fig:newdesign}
+\end{figure}
 
 \subsubsection{Stripmine-Script}
 
@@ -492,7 +525,7 @@ This page shows the results based on the terms specified in the search that was 
 \newline
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.35]{Report/graphics/results-1.png}
+    \includegraphics[scale=0.5]{Report/graphics/results-1.png}
     \caption{Results page in Stripmine-Site}
     \label{fig:results1}
 \end{figure}
@@ -523,13 +556,13 @@ The document page shows the full metadata and a list of all the arguments presen
 
 \subsection{Analysis of Project Management Technique}
 
-In Chapter 4, two project management techniques, a traditional waterfall methodology and the agile methodology, were reviewed, contrasted, and evaluated to decide which approach would be more suitable for this project.
+In Chapter 3, two project management techniques, a traditional waterfall methodology and the agile methodology, were reviewed, contrasted, and evaluated to decide which approach would be more suitable for this project.
 
 The traditional waterfall methodology was chosen for this project for several reasons. The first reason was the methods focus on the completion on tasks as this project had many requirements that were essential to the success of this project. Additionally, it was not foreseen that the requirements for the project would change throughout the duration of the project, eliminating one of the key weaknesses of this traditional methods.
 
 This project benefited from using the waterfall methodology through the resulting simplified timeline for the completion of tasks with no concern for reprioritisation leading to a simplified development cycle, allowing for time to be focused on developing the software. As expected, the project's requirements were not changed during the duration of the project.
 
-This project was hindered by using the waterfall methodology due to the lack of ability of being able to return to previous stages in the project lifecycle. As a result, some aspects of the software had a rushed but functional implementation that achieved the associated requirement and little more. Due to this rushed development, testing became minimal and little time remained for documentation.
+This project was hindered by using the waterfall methodology due to the lack of ability of being able to return to previous stages in the project life-cycle. As a result, some aspects of the software had a rushed but functional implementation that achieved the associated requirement and little more. Due to this rushed development, testing became minimal and little time remained for documentation.
 
 In conclusion, although the traditional waterfall methodology did facilitate the production of software that met the necessary requirements, the task focused direction of this method resulted in rushed development due to the lack of emphasis of time as a finite resource. 
 
