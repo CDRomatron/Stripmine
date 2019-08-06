@@ -21,6 +21,45 @@
 \usepackage{verbatim}
 \usepackage{float}
 
+\usepackage{listings}
+\usepackage{xcolor}
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\tiny,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+    literate=
+     *{:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
+\lstdefinelanguage{Python}{
+    basicstyle=\fontsize{11}{13}\selectfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background}
+}
+
 %%% PACKAGES
 \usepackage{booktabs} % for much better looking tables
 \usepackage{array} % for better arrays (eg matrices) in maths
@@ -72,7 +111,7 @@
 
 %LaTeX let you define the abstract separately so it wont get sucked into the main document.
 \begin{abstract}
-Discovering claims and evidence within a written argument can be a relatively trivial task for a human on a small scale, however to catalogue a large number of written arguments would require a different approach. Due to the diversity of arguments that can be made, identifying arguments programatically can prove a difficult task. However, software solutions are beginning to exist to attempt to tackle this problem. To use these solutions to catalogue large quantities of arguments from non-fiction text would provide researchers with an extensive amount of claims and evidence in a variety of topics.
+Discovering claims and evidence within a written argument can be a relatively trivial task for a human on a small scale, however to catalogue a large number of written arguments would require a different approach. Due to the diversity of arguments that can be made, identifying arguments programmatically can prove a difficult task. However, software solutions are beginning to exist to attempt to tackle this problem. To use these solutions to catalogue large quantities of arguments from non-fiction text would provide researchers with an extensive amount of claims and evidence in a variety of topics.
 
 The aim of this dissertation is to explore the development of a software solution to obtain text, while also using an existing argument mining software to identify arguments. These arguments will then be converted into a standardised format to be stored and used by researchers. The software development methodology used and produced software are evaluated based on the aims of the project.
 \end{abstract}
@@ -191,7 +230,7 @@ Semantic Role Labelling, which is a form of Shallow Semantic Parsing, attempts t
 
 \subsection{Argument Mining}
 
-Argument mining is described by Niculae et al as the process of automatically identifying arguments within documents (Niculae et al, 2017).
+Argument mining is described by Niculae et al as the process of automatically identifying claims and evidence within sources of text (Niculae et al, 2017). Once argument mining software has identified these claims and sources, they are annotated and ideally stored in a graph structure to link the claims to evidence that the claim supports or conflicts. It is important that the models used to express arguments are flexible due to the varied nature of natural language.
 
 \subsubsection{MARGOT}
 
@@ -222,7 +261,7 @@ Altun et al (2003) suggests that using a SVM with the HMM covers many of the wea
 
 Reddit is a social networking website which allows users to share interesting information from external sites and have other users vote "up" or "down" the content (Hanson, 2016). Content shared on Reddit come in two varieties, links to external websites, typically news articles or humorous images, and \emph{self posts}, consisting of text written by the user. Since there is no restriction on what subject areas can be covered by users, the website is broken down into various themed versions of Reddit known as ``Subreddits''.
 
-Reddit provides an API for developers to access the sites content programatically by registering the application and following the API terms\footnote{\url{https://github.com/reddit-archive/reddit/wiki/API}}.
+Reddit provides an API for developers to access the sites content programmatically by registering the application and following the API terms\footnote{\url{https://github.com/reddit-archive/reddit/wiki/API}}.
 
 \subsection{Python}
 
@@ -256,9 +295,102 @@ Bootstrap is an open-source front-end framework which provides many tools which 
 
 SADFace (Simple Argument Description Format) is a JSON-based document format used to model the various aspects and meta-data related to arguments. The aim of SADFace is the provide a format suitable for use with argument related tools for the web. The contained argument is stored as a directed graph, with the nodes representing either premises or the conclusion and the edges containing both a source and target to signify direction (Wells, 2018).
 
+The contents of a SADFace formatted document are split into three categories: metadata, nodes, and edges.
+
+The metadata attribute contains an object titled ``core'' which stores data related to the document, such as the analyst's name and email, the date and time the document was created and last edited, a title and description, and a unique identification value. If further metadata is required, additional objects can be included in the metadata field.
+
+The nodes attribute is an array that contains the various nodes in the graph. There are two types of nodes: atom nodes which is used to contain a claim or evidence, and a scheme nodes which is used to indicate how a atom node affects another atom node such as indicating conflict or indicating support. Each node contains attributes for a unique identification value, and an object to store associated metadata.
+
+The edges attribute is an array that contains the various edges in the graph. Each edge contains a unique identification value, the identification value of the node the edge originates from, and the identification value of the node that the edge should point to.
+
+\begin{figure}[H]
+    \centering
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+    "edges": [
+        {
+            "id": "3df54ae1-fa41-4ac7-85d5-4badee39215b",
+            "source_id": "70447169-9264-41dc-b8e9-50523f8368c1",
+            "target_id": "ae3f0c7f-9f69-4cab-9db3-3b9c46f56e09"
+        },
+        {
+            "id": "64430e6e-1300-4623-9b89-3c014587f7ae",
+            "source_id": "f129934f-53d2-49f6-8feb-9afaff9aabcf",
+            "target_id": "70447169-9264-41dc-b8e9-50523f8368c1"
+        },
+        {
+            "id": "1aae6f5e-f1a7-4873-aa64-a606a0e481cd",
+            "source_id": "6cd219cc-3203-4602-88bd-d3639f86fb37",
+            "target_id": "70447169-9264-41dc-b8e9-50523f8368c1"
+        }
+    ],
+    "metadata": {
+        "core": {
+            "analyst_email": "siwells@gmail.com",
+            "analyst_name": "Simon Wells",
+            "created": "2019-04-22T23:52:30",
+            "description": "An example SADFace document showing an argument analysis of the Hangback cycle safety campaign from the STCD corpora.",
+            "edited": "2019-04-22T23:52:30",
+            "id": "42e56df7-4074-40d8-8ea1-4fca5321dd31",
+            "notes": "This is incomplete because the analysis in Pangbourne & Wells (2018) has much more argumenative content.",
+            "title": "Hangback Example",
+            "version": "0.2"
+        }
+    },
+    "nodes": [
+        {
+            "id": "ae3f0c7f-9f69-4cab-9db3-3b9c46f56e09",
+            "metadata": {},
+            "sources": [],
+            "text": "The 'Hang Back' campaign video should not have been published, and should be withdrawn.",
+            "type": "atom"
+        },
+        {
+            "id": "70447169-9264-41dc-b8e9-50523f8368c1",
+            "metadata": {},
+            "name": "support",
+            "type": "scheme"
+        },
+        {
+            "id": "f129934f-53d2-49f6-8feb-9afaff9aabcf",
+            "metadata": {},
+            "sources": [],
+            "text": "The 'Hang Back' campaign was the wrong campaign to run",
+            "type": "atom"
+        },
+        {
+            "id": "6cd219cc-3203-4602-88bd-d3639f86fb37",
+            "metadata": {},
+            "sources": [],
+            "text": "The 'Hang Back' advert does not clearly express the intended message",
+            "type": "atom"
+        }
+    ],
+    "resources": []
+}
+\end{lstlisting}
+    \caption{Example SADFace document (source: Wells, 2018 [shortened])}
+    \label{fig:sadfaceexample}
+\end{figure}
+
+
 \subsubsection{PRAW}
 
-PRAW (Python Reddit API Wrapper) is a Python package which enables simple access to Reddit's API and is compliant with Reddit's API rules.
+PRAW (Python Reddit API Wrapper) is a Python package which enables simple access to Reddit's API and is compliant with Reddit's API rules. PRAW allows for a Reddit instance to be treated as a python object enabling efficient and simple development.
+
+Using the PRAW library can provide many benefits over simply calling the API. The first benefit is that there is no concern that programmatically accessing the API will result in a violation of Reddit's API rules as the limits stated in the rules are built into the library. Another benefit is that an application using this library will have future-proofing against any changes to the Reddit API structure as the library will be updated to reflect these changes.
+
+\subsubsection{Related Work}
+
+Wachsmuth et al (2017) has explored the concept of a two-stage process of indexing and retrieving arguments. Initially, text is collected, preprocessed for natural language processing, and undergoes argument mining. The text is the assessed for various criteria for meta-properties such as the probability of the source page being spam. Once processed, the data is serialised into JSON format to be indexed.
+
+In the retrieval process, when a search query is presented, relevant arguments are obtained from the index. The retrieved arguments are then ordered based on relevancy and the meta-properties associated with the text source. These results are displayed through a web app.
+
+One of the strengths with this presented method is that similar technologies were used throughout the process, increasing compatibility.
+
+A weaknesses of this approach was that many of the data sources used contained ``noisy'' data, as some of the collected text did not contain arguments. Due to a lack of moderation of these sources, some of the received data contained insults and spam.
+
+Although the prototype produced is limited to specific data sources, the presented approach was able to successfully obtain, identify and annotate arguments from a source and indexed these arguments for later retrieval.
 
 
 \newpage
@@ -497,26 +629,212 @@ The Spider class is the first module in the chain. This module obtains text from
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.6]{Report/graphics/ABC.png}
+    \begin{lstlisting}[language=Python,firstnumber=1]
+from abc import ABC, abstractclassmethod
+
+#The spider class forms the basis of how the text that is to be mined is gathered
+
+#The return of runspider should return an array of Spiderextract objects
+
+class Spider(ABC):
+    @abstractclassmethod
+    def runspider(self):
+        pass
+\end{lstlisting}
     \caption{Spider abstract base class}
     \label{fig:ABC}
 \end{figure}
 
 For this implementation the Spider accesses the Reddit API for the ``changemyview'' section\footnote{https://www.reddit.com/r/changemyview}. It obtains posts made in this section, then collects the text of these posts and relating metadata such as a link to the post, the authors username, and title of the post. The module takes this data and assigns the text and metadata to the SpiderExtract class and appends it to a list to be returned once the Spider has finished. 
 
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}[language=Python,firstnumber=1]
+    class Spiderextract():
+    def __init__(self, text, meta):
+        self.text = text
+        self.meta = meta
+    \end{lstlisting}
+    \caption{SpiderExtract Class}
+    \label{fig:spiderextract}
+\end{figure}
+
 \paragraph{Miner}\mbox{}\\
 
 The Miner class accepts text gathered by the spider and runs the text through an argument miner. The argument takes this text and attempts to identify any arguments made in the text. Depending on the argument miner used, different data may be obtained. Once the argument miner has finished processing, the data is serialised into JSON format.
 
-For this project MARGOT\footnote{\url{http://margot.disi.unibo.it/}} was used to identify and classify arguments.
+For this project MARGOT\footnote{\url{http://margot.disi.unibo.it/}} was used to identify and classify arguments. MARGOT processes each sentence from the text individually and provides a ``claim'' score and a ``evidence'' score. If the claim score is positive, the sentience is tagged as a claim. If the evidence score is positive, the sentence is tagged as evidence. A sentence can be tagged as both a claim and evidence if both scores are positive. If both scores are negative, then the sentence is disregarded.
+
+\begin{figure}[H]
+    \centering
+    \emph{I'm young and I consider myself pretty far left (my values align pretty closely with Warren, Sanders, AOC). I've noticed that a small minority of leftists and democratic socialists advocate for open borders while also arguing that universal healthcare should be a priority in the Democratic Party. 
+I firmly believe basic healthcare is a human right that should be provided by the government to all people regardless of immigration status. I want to believe in open borders because I see how borders have turned entire countries and regions into war zones (not only in the American southwest but in India/Pakistan, Israel/Palestine, etc)....However, I can't help but feel that if we had both universal healthcare and open borders, we would create a 'drain' in which people could come over from other countries, obtain free healthcare, and leave without making enough of a contribution to the American economy to sustain the system. 
+One answer would be to have universal healthcare only for Americans or people residing in America. However, then we get in the business of denying healthcare based on immigration status which is morally wrong. I can't support the idea that some people are more entitled to life-saving care than others based on a piece of documentation.}
+    \caption{Example input used for MARGOT}
+    \label{fig:margotin}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}[language=json,firstnumber=1]
+    {
+	"document": [{
+		"claim_score": -1.3702013,
+		"evidence": "I 'm young and I consider myself pretty far left ( my values align pretty closely with Warren , Sanders , AOC ) .",
+		"evidence_score": 0.12699584,
+		"text": "I 'm young and I consider myself pretty far left ( my values align pretty closely with Warren , Sanders , AOC ) ."
+	}, {
+		"claim_score": 1.442699,
+		"evidence": "I 've noticed that a small minority of leftists and democratic socialists advocate for open borders while also arguing that universal healthcare should be a priority in the Democratic Party .",
+		"evidence_score": 0.27889555,
+		"text": "I 've noticed that a small minority of leftists and democratic socialists advocate for open borders while also arguing that universal healthcare should be a priority in the Democratic Party .",
+		"claim_evidence": "a small minority of leftists and democratic socialists advocate for open bordersuniversal healthcare should be a priority in the Democratic Party"
+	}, {
+		"claim_score": 1.7968134,
+		"evidence": "I firmly believe basic healthcare is a human right that should be provided by the government to all people regardless of immigration status .",
+		"evidence_score": 0.8799667,
+		"text": "I firmly believe basic healthcare is a human right that should be provided by the government to all people regardless of immigration status .",
+		"claim_evidence": "basic healthcare is a human right that should be provided by the government to all people regardless of immigration status"
+	}, {
+		"claim_score": 0.67364616,
+		"evidence": "I want to believe in open borders because I see how borders have turned entire countries and regions into war zones ( not only in the American southwest but in India/Pakistan , Israel/Palestine , etc ) ... However , I ca n't help but feel that if we had both universal healthcare and open borders , we would create a ` drain ' in which people could come over from other countries , obtain free healthcare , and leave without making enough of a contribution to the American economy to sustain the system .",
+		"evidence_score": 0.42676648,
+		"text": "I want to believe in open borders because I see how borders have turned entire countries and regions into war zones ( not only in the American southwest but in India/Pakistan , Israel/Palestine , etc ) ... However , I ca n't help but feel that if we had both universal healthcare and open borders , we would create a ` drain ' in which people could come over from other countries , obtain free healthcare , and leave without making enough of a contribution to the American economy to sustain the system .",
+		"claim_evidence": "how borders have turned entire countries and regions into warpeople could come over from other countriesa contribution to the American economy to sustain the system"
+	}, {
+		"claim_score": -1.0185136,
+		"evidence_score": -0.97960465,
+		"text": "One answer would be to have universal healthcare only for Americans or people residing in America ."
+	}, {
+		"claim_score": -0.30270245,
+		"evidence": "However , then we get in the business of denying healthcare based on immigration status which is morally wrong .",
+		"evidence_score": 0.12365175,
+		"text": "However , then we get in the business of denying healthcare based on immigration status which is morally wrong ."
+	}, {
+		"claim_score": 0.99497137,
+		"evidence_score": -0.022833407,
+		"claim": "some people are more entitled to life-saving care than others based on a piece of documentation",
+		"text": "I ca n't support the idea that some people are more entitled to life-saving care than others based on a piece of documentation ."
+	}]
+}
+    \end{lstlisting}
+    \caption{Example JSON output produced by MARGOT}
+    \label{fig:margot}
+\end{figure}
 
 \paragraph{Parser}\mbox{}\\
 
 The Parser class works in tandem with the Miner class and an appropriate parser will need to be developed to match the miner used. The parser receives the JSON from the miner and converts the data into the SADFace format. Due to the variety of ways the miner could produce data, a parser will have to be developed to suit the data produced by the miner.
 
+\begin{lstlisting}[language=json,firstnumber=1]
+    {
+  "edges": [], 
+  "metadata": {
+    "core": {
+      "analyst_email": "", 
+      "analyst_name": "", 
+      "created": "2019-07-18T01:19:49", 
+      "description": "", 
+      "edited": "", 
+      "id": "710e730b-ddf6-477b-8705-a5ad2a6f2ae0", 
+      "notes": "", 
+      "title": "", 
+      "version": ""
+    }, 
+    "extended": {
+      "Author": "amerikhanna", 
+      "Fulltext": "I'm young and I consider myself pretty far left (my values align pretty closely with Warren, Sanders, AOC). I've noticed that a small minority of leftists and democratic socialists advocate for open borders while also arguing that universal healthcare should be a priority in the Democratic Party. \n\nI firmly believe basic healthcare is a human right that should be provided by the government to all people regardless of immigration status. I want to believe in open borders because I see how borders have turned entire countries and regions into war zones (not only in the American southwest but in India/Pakistan, Israel/Palestine, etc)....However, I can't help but feel that if we had both universal healthcare and open borders, we would create a 'drain' in which people could come over from other countries, obtain free healthcare, and leave without making enough of a contribution to the American economy to sustain the system. \n\nOne answer would be to have universal healthcare only for Americans or people residing in America. However, then we get in the business of denying healthcare based on immigration status which is morally wrong. I can't support the idea that some people are more entitled to life-saving care than others based on a piece of documentation.", 
+      "Source": "https://reddit.com/r/changemyview/comments/ce16jh/cmv_in_the_united_states_open_borders_and/", 
+      "Title": "CMV: In the United States, open borders and universal healthcare are contradictory goals"
+    }
+  }, 
+  "nodes": [
+    {
+      "id": "e598b623-b280-4970-a7de-abb7203d3e7d", 
+      "metadata": {
+        "type": "evidence"
+      }, 
+      "text": "I 'm young and I consider myself pretty far left ( my values align pretty closely with Warren , Sanders , AOC ) .", 
+      "type": "atom"
+    }, 
+    {
+      "id": "466d5090-4786-44b2-804f-8112edb4a3b9", 
+      "metadata": {
+        "type": "evidence"
+      }, 
+      "text": "I 've noticed that a small minority of leftists and democratic socialists advocate for open borders while also arguing that universal healthcare should be a priority in the Democratic Party .", 
+      "type": "atom"
+    }, 
+    {
+      "id": "53fecf38-44f3-414a-8f10-73dcd8b81a75", 
+      "metadata": {
+        "type": "claim_evidence"
+      }, 
+      "text": "a small minority of leftists and democratic socialists advocate for open bordersuniversal healthcare should be a priority in the Democratic Party", 
+      "type": "atom"
+    }, 
+    {
+      "id": "73d8437a-8855-4f14-b7c7-bab7e52f043a", 
+      "metadata": {
+        "type": "evidence"
+      }, 
+      "text": "I firmly believe basic healthcare is a human right that should be provided by the government to all people regardless of immigration status .", 
+      "type": "atom"
+    }, 
+    {
+      "id": "30ec40eb-f022-4e9e-a78d-d3b35ceb6ac3", 
+      "metadata": {
+        "type": "claim_evidence"
+      }, 
+      "text": "basic healthcare is a human right that should be provided by the government to all people regardless of immigration status", 
+      "type": "atom"
+    }, 
+    {
+      "id": "925bcb9b-cb1a-4ea6-9bfa-c8e8ae2e7bb7", 
+      "metadata": {
+        "type": "evidence"
+      }, 
+      "text": "I want to believe in open borders because I see how borders have turned entire countries and regions into war zones ( not only in the American southwest but in India/Pakistan , Israel/Palestine , etc ) ... However , I ca n't help but feel that if we had both universal healthcare and open borders , we would create a ` drain ' in which people could come over from other countries , obtain free healthcare , and leave without making enough of a contribution to the American economy to sustain the system .", 
+      "type": "atom"
+    }, 
+    {
+      "id": "3e9abec3-5a7a-4e06-a393-e79cf21db812", 
+      "metadata": {
+        "type": "claim_evidence"
+      }, 
+      "text": "how borders have turned entire countries and regions into warpeople could come over from other countriesa contribution to the American economy to sustain the system", 
+      "type": "atom"
+    }, 
+    {
+      "id": "669e7b02-bdb9-49bd-87b5-71f1f1a706ae", 
+      "metadata": {
+        "type": "evidence"
+      }, 
+      "text": "However , then we get in the business of denying healthcare based on immigration status which is morally wrong .", 
+      "type": "atom"
+    }, 
+    {
+      "id": "79e77862-65db-4050-9542-38c01e246bf5", 
+      "metadata": {
+        "type": "claim"
+      }, 
+      "text": "some people are more entitled to life-saving care than others based on a piece of documentation", 
+      "type": "atom"
+    }
+  ], 
+  "resources": null
+}
+
+    \end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \caption{SADFace produced by parsing the example JSON}
+    \label{fig:sadfaceparse}
+\end{figure}{}
+
 \paragraph{Database}\mbox{}\\
 
-The Database module takes the resulting SADFace document and inserts it into a database. For this projects implmentation MongoDB was used.
+The Database module takes the resulting SADFace document and inserts it into a database. For this projects implementation MongoDB was used. Due to the flexibility of NoSQL databases such as MongoDB, SADFace documents can be inserted without any need to convert to match a schema.
 
 \subsubsection{Monstache}
 
@@ -590,7 +908,15 @@ At the beginning on the project, stakeholders were identified and requirement an
 
 The implementation was able to stay in line with the original proposed design of the project and meet not only the core requirements of the project, but was also able to implement a small number of improvements from other requirements.
 
-In conclusion, this implementation can be considered successful as it met it's original aim, although it lacks some features that would have been more beneficial to include.
+Comparing this implementation to the existing approach suggested by Wachsmuth et al (2017) highlights the strengths and weakness of Stripmine.
+
+These strengths include: compatibility with existing and future argumentation software by using a existing JSON format such as SADFace, and the stages of the argument retrieval having a modular implementation to allow for simplified further development. 
+
+Weakness that are highlighted include: a lack of ability to order arguments by relevancy such as identifying arguments as `for' or `against', a lack of preprocessing on the source text to improve compatibility with the argument mining software, and a lack of evaluation of metadata.
+
+Many of the highlighted weaknesses come as a result of limitations of the argument mining software used within this project. Had a different piece of argument mining software been used, these weaknesses could be overcome.
+
+In conclusion, this implementation can be considered successful as it met it's original aim and improved on some aspects of existing solutions, although it lacks some features that would have been more beneficial to include.
 
 \newpage
 \section{Conclusion}
@@ -607,7 +933,7 @@ The second aim of this project was to develop an application to extract argument
 
 In the requirements analysis stage of the project, many requirements we're identified and although all of the necessary requirements were met, there are still a number of features that would improve the project and help increase the longevity of the project. For example, using the SADFace library to parse data into the SADFace document format would remove the need for all the parser modules requiring updating in the event of a change to the SADFace document format structure.
 
-For the web app, an addition that would help future developments would be to implement an API to access the database so that future projects can programatically access the data store remotely.
+For the web app, an addition that would help future developments would be to implement an API to access the database so that future projects can programmatically access the data store remotely.
 
 Finally, due to limitations of current argument mining software, the produced SADFace document lacks information that needs to be inserted. For example, although the argument mining software used in this project, MARGOT, is able to identify claims and evidence, which appear as nodes in the graph, linking edges are not produced to connect claims with appropriate evidence and vice versa. Since it may be some time before argument mining software advances to be able to connect claims with evidence, further developments could be made to integrate Monkeypuzzle with Stripmine so that the researcher can create the edges without needing to download the SADFace document onto their computing and then upload the document into Monkeypuzzle, to then download the new document and insert into the database. By being able to edit the document found in Stripmine with Monkeypuzzle and being able to save the document to the database through Monkeypuzzle would streamline the researchers work significantly.
 
@@ -615,7 +941,11 @@ With the software produced as part of this project is open source, this leaves r
 
 \subsection{Personal Statement}
 
-Although it has been challenging, it is extremely satisfying to have written a dissertation on this topic. The main difficulty I faced during this project was the initial research, as argumentation is such an extensive topic it was hard to decide where to start and where to stop with researching argumentation. I am pleased with the approach that I took to the software development portion of this project as well as the functionality of the software produced. It was a great benefit to have already had experience with some of the main technologies used within this project which allowed for more time to be allocated to research and writing. If I were to redo this project I would have placed a stronger emphasis on time management as well as taking more time to consider each stage of the project in more detail.
+Although it has been challenging, it is extremely satisfying to have written a dissertation on this topic. The main difficulty I faced during this project was the initial research, as argumentation is such an extensive topic it was hard to decide where to start and where to stop with researching argumentation. I am pleased with the approach that I took to the software development portion of this project as well as the functionality of the software produced. It was a great benefit to have already had experience with some of the main technologies used within this project which allowed for more time to be allocated to research and writing.
+
+In hindsight I would have placed a stronger emphasis on time management as well as taking more time to consider each stage of the project in more detail. At the beginning of the project, I was unclear of appropriate aims and objectives for this project as well as the scope of the deliverables. Concerns regarding this lack of clarity should have been discussed earlier in the project to help focus the research performed at the start.
+
+In conclusion, I am very happy with the deliverables that I was able to produce for this project. Stripmine has been able to reach a stage where it is comparable in function to the only known existing implementation (Wachsmuth at al, 2017) which is a project developed by a large group of professional researchers. With further development, Stripmine could go on to have a strong impact on argumentation research at Edinburgh Napier University.
 
 
 \newpage
@@ -721,6 +1051,9 @@ Although it has been challenging, it is extremely satisfying to have written a d
 
 \bibitem{wells18}
   Wells, S. (2018). \textit{siwells/SADFace}. [online] GitHub. Available at: https://github.com/siwells/SADFace [Accessed 9 Feb. 2019].
+  
+\bibitem{wachsmuth17}
+  Wachsmuth, H., Potthast, M., Al Khatib, K., Ajjour, Y., Puschmann, J., Qu, J., Dorsch, J., Viorel, M., Bevendorff, J., \& Stein, B. (2017, September). Building an argument search engine for the web. \textit{In Proceedings of the 4th Workshop on Argument Mining} (pp. 49-59).
  
 \bibitem{nahar13}
   Nahar, N., Wora, P., \& Kumaresh, S. (2013). Managing Requirement Elicitation Issues Using Step-Wise Refinement Model. \textit{International Journal of Advanced Studies in Computers, Science and Engineering, 2}(5), 27.
